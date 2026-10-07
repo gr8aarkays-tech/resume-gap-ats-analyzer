@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>ATS Resume Validator & Gap Analyzer</title>
+<style>
+/* ── Reset & Tokens ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f0f4ff;
+  --surface:#ffffff;
+  --surface2:#f7f9ff;
+  --border:#e2e8f8;
+  --text:#0f172a;
+  --muted:#64748b;
+  --accent:#4f46e5;
+  --accent2:#7c3aed;
+  --green:#16a34a;--green-bg:#f0fdf4;--green-border:#bbf7d0;
+  --orange:#ea580c;--orange-bg:#fff7ed;--orange-border:#fed7aa;
+  --red:#dc2626;--red-bg:#fef2f2;--red-border:#fecaca;
+  --yellow:#d97706;
+  --radius:14px;
+  --shadow:0 4px 24px rgba(79,70,229,.08);
+  --shadow-md:0 8px 40px rgba(79,70,229,.13);
+}
+body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;line-height:1.6;}
+
+/* ── Layout ── */
+.app{max-width:900px;margin:0 auto;padding:40px 20px 60px;}
+
+/* ── Header ── */
+.hdr{text-align:center;margin-bottom:40px;}
+.hdr .badge{display:inline-flex;align-items:center;gap:6px;background:rgba(79,70,229,.1);color:var(--accent);border:1px solid rgba(79,70,229,.2);border-radius:99px;padding:4px 14px;font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:16px;}
+.hdr h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:800;letter-spacing:-.5px;line-height:1.2;}
+.hdr h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hdr p{color:var(--muted);margin-top:10px;font-size:1rem;max-width:520px;margin-inline:auto;}
+
+/* ── Card ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);}
+.card+.card{margin-top:20px;}
+
+/* ── Drop Zone ── */
+.drop-zone{border:2px dashed var(--border);border-radius:12px;padding:44px 20px;text-align:center;cursor:pointer;transition:.25s;background:var(--surface2);position:relative;overflow:hidden;}
+.drop-zone:hover,.drop-zone.hover{border-color:var(--accent);background:rgba(79,70,229,.04);}
+.drop-zone.attached{border-color:var(--green);border-style:solid;background:var(--green-bg);}
+.drop-zone .dz-icon{width:48px;height:48px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;background:rgba(79,70,229,.1);border-radius:12px;}
+.drop-zone .dz-title{font-weight:700;font-size:1rem;margin-bottom:4px;}
+.drop-zone .dz-sub{color:var(--muted);font-size:13px;}
+.drop-zone .dz-formats{display:inline-flex;gap:6px;margin-top:12px;}
+.fmt-badge{background:var(--border);color:var(--muted);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:700;letter-spacing:.5px;}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.drop-zone .check-icon{display:none;width:52px;height:52px;background:var(--green);border-radius:50%;margin:0 auto 12px;align-items:center;justify-content:center;}
+.drop-zone.attached .check-icon{display:flex;}
+.drop-zone.attached .upload-state{display:none;}
+
+/* ── Role Inputs ── */
+.role-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;}
+@media(max-width:600px){.role-row{grid-template-columns:1fr;}}
+.field label{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:7px;}
+.field input{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:12px 16px;font-size:.95rem;color:var(--text);font-family:inherit;transition:.2s;}
+.field input:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(79,70,229,.12);}
+.field input::placeholder{color:#b0bcd4;}
+
+/* ── Analyze Button ── */
+.btn-analyze{width:100%;margin-top:24px;padding:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;border-radius:12px;font-size:1rem;font-weight:800;cursor:pointer;letter-spacing:.3px;transition:.2s;box-shadow:0 4px 20px rgba(79,70,229,.3);}
+.btn-analyze:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 28px rgba(79,70,229,.4);}
+.btn-analyze:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+
+/* ── Loading State ── */
+#loading{display:none;}
+.scan-wrap{position:relative;width:140px;height:180px;margin:0 auto 28px;}
+.doc-body{width:100%;height:100%;background:#fff;border-radius:8px;border:2px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,.08);position:relative;overflow:hidden;}
+.doc-lines{padding:20px 16px;}
+.doc-line{height:6px;background:#e2e8f8;border-radius:99px;margin-bottom:8px;}
+.doc-line:nth-child(1){width:55%;}
+.doc-line:nth-child(2){width:100%;}
+.doc-line:nth-child(3){width:85%;}
+.doc-line:nth-child(4){width:92%;}
+.doc-line:nth-child(5){width:70%;}
+.doc-line:nth-child(6){width:100%;}
+.doc-line:nth-child(7){width:80%;}
+.scan-bar{position:absolute;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent),transparent);top:0;animation:scan 1.4s linear infinite;border-radius:99px;box-shadow:0 0 8px var(--accent);}
+@keyframes scan{0%{top:0;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:100%;opacity:0}}
+.ld-text{text-align:center;font-weight:700;font-size:1.05rem;color:var(--text);}
+.ld-sub{text-align:center;font-size:13px;color:var(--muted);margin-top:4px;}
+.ld-dots::after{content:'';animation:dots 1.5s steps(4,end) infinite;}
+@keyframes dots{0%,20%{content:''}40%{content:'.'}60%{content:'..'}80%,100%{content:'...'}}
+
+/* ── Results ── */
+#results{display:none;}
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:680px){.results-grid{grid-template-columns:1fr;}}
+.sec-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px;}
+
+/* ── Radial Gauge ── */
+.gauge-section{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge-wrap{position:relative;width:160px;height:160px;margin-bottom:14px;}
+.gauge-wrap svg{transform:rotate(-90deg);}
+.g-track{fill:none;stroke:#e2e8f8;stroke-width:12;}
+.g-fill{fill:none;stroke-width:12;stroke-linecap:round;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1),stroke .5s;}
+.gauge-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.gauge-pct{font-size:2.2rem;font-weight:900;line-height:1;}
+.gauge-lbl{font-size:11px;color:var(--muted);font-weight:600;margin-top:2px;}
+.score-band{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:800;}
+.band-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.band-orange{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border);}
+.band-red{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+.gauge-desc{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;max-width:160px;}
+
+/* ── ATS Checklist ── */
+.check-list{list-style:none;}
+.check-list li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13.5px;}
+.check-list li:last-child{border-bottom:none;}
+.ci{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;}
+.ci-pass{background:var(--green-bg);color:var(--green);}
+.ci-fail{background:var(--red-bg);color:var(--red);}
+.ci-warn{background:var(--orange-bg);color:var(--orange);}
+.ck-text{flex:1;}
+.ck-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:4px;letter-spacing:.4px;}
+.ck-pass{background:var(--green-bg);color:var(--green);}
+.ck-fail{background:var(--red-bg);color:var(--red);}
+.ck-warn{background:var(--orange-bg);color:var(--orange);}
+
+/* ── Gap Analysis ── */
+.gap-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:680px){.gap-grid{grid-template-columns:1fr;}}
+.gap-col h4{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;margin-bottom:12px;}
+.gap-col.strengths h4{color:var(--green);}
+.gap-col.missing h4{color:var(--red);}
+.tag-list{display:flex;flex-wrap:wrap;gap:7px;}
+.tag{padding:5px 12px;border-radius:8px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:5px;}
+.tag-s{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.tag-m{background:var(--red-bg);color:var(--red);border:1px solid var(--red-border);}
+.tag-c{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border);}
+
+/* ── Recommendations ── */
+.rec-list{list-style:none;}
+.rec-list li{display:flex;gap:14px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);}
+.rec-list li:last-child{border-bottom:none;}
+.rec-num{width:28px;height:28px;min-width:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.rec-body strong{display:block;font-size:.9rem;margin-bottom:3px;}
+.rec-body span{font-size:12.5px;color:var(--muted);}
+.priority-tag{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:1px 7px;border-radius:4px;margin-left:7px;vertical-align:middle;}
+.p-high{background:var(--red-bg);color:var(--red);}
+.p-med{background:var(--orange-bg);color:var(--orange);}
+.p-low{background:var(--green-bg);color:var(--green);}
+
+/* ── Reset Button ── */
+.btn-reset{display:block;margin:28px auto 0;padding:11px 28px;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;font-weight:700;color:var(--muted);cursor:pointer;transition:.2s;}
+.btn-reset:hover{border-color:var(--accent);color:var(--accent);}
+
+/* ── Misc ── */
+.full-width{grid-column:1/-1;}
+.divider{height:1px;background:var(--border);margin:20px 0;}
+.section-title{font-size:1rem;font-weight:800;margin-bottom:4px;}
+.section-desc{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="hdr">
+    <div class="badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+      AI-Powered · No Backend
+    </div>
+    <h1>ATS Resume <span>Validator & Gap Analyzer</span></h1>
+    <p>Upload your resume, enter your target role, and get an instant ATS compatibility score with actionable improvement steps.</p>
+  </div>
+
+  <!-- ── INPUT SECTION ── -->
+  <div id="input-section">
+    <div class="card">
+      <!-- Drop Zone -->
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx" onchange="handleFile(this)"/>
+        <div class="upload-state">
+          <div class="dz-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4f46e5" stroke-width="2.2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <div class="dz-title">Drop your resume here or <span style="color:var(--accent)">browse</span></div>
+          <div class="dz-sub">Drag &amp; drop your file to get started</div>
+          <div class="dz-formats">
+            <span class="fmt-badge">PDF</span>
+            <span class="fmt-badge">DOC</span>
+            <span class="fmt-badge">DOCX</span>
+          </div>
+        </div>
+        <div class="check-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div id="attachedName" style="display:none;font-weight:700;color:var(--green);font-size:.95rem;margin-top:4px;"></div>
+        <div id="attachedSub" style="display:none;font-size:12px;color:var(--muted);margin-top:3px;">Ready for analysis</div>
+      </div>
+
+      <!-- Role fields -->
+      <div class="role-row">
+        <div class="field">
+          <label>Current Role / Title</label>
+          <input type="text" id="currentRole" placeholder="e.g. QA Engineer, Developer" />
+        </div>
+        <div class="field">
+          <label>Target Role / Title</label>
+          <input type="text" id="targetRole" placeholder="e.g. Test Architect, Tech Lead" />
+        </div>
+      </div>
+
+      <button class="btn-analyze" id="analyzeBtn" onclick="runAnalysis()">
+        Analyze Resume →
+      </button>
+    </div>
+  </div>
+
+  <!-- ── LOADING STATE ── -->
+  <div id="loading" class="card" style="padding:52px 28px;text-align:center;">
+    <div class="scan-wrap">
+      <div class="doc-body">
+        <div class="scan-bar"></div>
+        <div class="doc-lines">
+          <div class="doc-line"></div><div class="doc-line"></div>
+          <div class="doc-line"></div><div class="doc-line"></div>
+          <div class="doc-line"></div><div class="doc-line"></div>
+          <div class="doc-line"></div>
+        </div>
+      </div>
+    </div>
+    <div class="ld-text" id="ldText">Parsing document structure<span class="ld-dots"></span></div>
+    <div class="ld-sub" id="ldSub">This takes just a moment</div>
+    <div style="margin-top:20px;width:220px;height:5px;background:var(--border);border-radius:99px;margin-inline:auto;overflow:hidden;">
+      <div id="ldBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .4s ease;"></div>
+    </div>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div id="results">
+
+    <!-- Summary banner -->
+    <div id="summaryBanner" class="card" style="margin-bottom:20px;background:linear-gradient(135deg,#f0f4ff,#ede9fe);border-color:#c7d2fe;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:4px;">Analysis Complete</div>
+          <div id="bannerTitle" style="font-size:1.15rem;font-weight:800;"></div>
+          <div id="bannerSub" style="font-size:13px;color:var(--muted);margin-top:3px;"></div>
+        </div>
+        <button class="btn-reset" style="margin:0" onclick="resetApp()">↩ Analyze Another</button>
+      </div>
+    </div>
+
+    <!-- Top row: Gauge + Checklist -->
+    <div class="results-grid" style="margin-bottom:20px;">
+
+      <!-- Gauge card -->
+      <div class="card gauge-section">
+        <div class="sec-label">ATS Match Score</div>
+        <div class="gauge-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle class="g-track" cx="80" cy="80" r="64"/>
+            <circle class="g-fill" id="gaugeFill" cx="80" cy="80" r="64"
+              stroke-dasharray="402" stroke-dashoffset="402"/>
+          </svg>
+          <div class="gauge-inner">
+            <span class="gauge-pct" id="gaugePct">0%</span>
+            <span class="gauge-lbl">ATS Score</span>
+          </div>
+        </div>
+        <div id="scoreBand" class="score-band"></div>
+        <div class="gauge-desc" id="gaugeDesc"></div>
+      </div>
+
+      <!-- ATS Checklist card -->
+      <div class="card">
+        <div class="sec-label">Core ATS Checks</div>
+        <ul class="check-list" id="checkList"></ul>
+      </div>
+
+    </div>
+
+    <!-- Gap Analysis (full width) -->
+    <div class="card" style="margin-bottom:20px;">
+      <div class="sec-label">Profile Gap Analysis</div>
+      <div class="section-title" id="gapTitle"></div>
+      <div class="section-desc" id="gapDesc"></div>
+      <div class="gap-grid">
+        <div class="gap-col strengths">
+          <h4>✓ Current Strengths</h4>
+          <div class="tag-list" id="strengthTags"></div>
+        </div>
+        <div class="gap-col missing">
+          <h4>✗ Missing for Target Role</h4>
+          <div class="tag-list" id="missingTags"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations (full width) -->
+    <div class="card">
+      <div class="sec-label">Actionable Recommendations</div>
+      <div class="section-title">Immediate improvements to boost your score</div>
+      <div class="section-desc" id="recDesc"></div>
+      <ul class="rec-list" id="recList"></ul>
+    </div>
+
+  </div>
+</div>
+
+<footer style="text-align:center;padding:20px;font-size:12px;color:#94a3b8;border-top:1px solid var(--border);">
+  Made with ❤️  by Rajendra &nbsp;·&nbsp; Simulated analysis — no data is stored or transmitted
+</footer>
+
+<script>
+/* ── Mock data engine ── */
+const ROLE_DATA = {
+  default: {
+    score: 72,
+    strengths: ['Communication','Teamwork','Problem Solving','Documentation','Agile','Attention to Detail'],
+    missing: ['Leadership','Strategic Planning','Mentoring','Budget Management','Architecture Design'],
+    checks: [
+      {label:'File Format Readable',status:'pass'},
+      {label:'No Text Boxes / Graphics Found',status:'pass'},
+      {label:'Standard Section Headings',status:'pass'},
+      {label:'Contact Info in Header/Footer',status:'fail'},
+      {label:'Measurable Achievements Present',status:'warn'},
+      {label:'No Tables Blocking Parsing',status:'pass'},
+      {label:'Consistent Date Formatting',status:'fail'},
+    ],
+    recs: [
+      {p:'high',title:'Add measurable achievements',body:'Replace vague statements like "improved performance" with quantified results: "Reduced regression suite runtime by 40% (from 90 min to 54 min)."'},
+      {p:'high',title:'Move contact info to plain header',body:'Many ATS systems only scan the header/footer for contact details. Ensure email, phone and LinkedIn are in a plain-text area outside any text boxes.'},
+      {p:'med',title:'Use target role keywords throughout',body:'ATS systems parse for exact keyword matches. Mirror the target job description — include terms like "architecture", "strategy" and "stakeholder" in context.'},
+      {p:'low',title:'Standardise all date formats',body:'Mixed formats (e.g. "Jan 2021" vs "2021-01") can confuse parsers. Use one consistent style: "Month YYYY" across all roles.'},
+    ],
+  },
+
+  qa: {
+    score: 68,
+    strengths: ['Selenium WebDriver','API Testing','JIRA','Test Planning','SQL','CI/CD Basics','Regression Testing'],
+    missing: ['Test Architecture','Framework Design','Test Strategy Ownership','Mentoring Juniors','Stakeholder Reporting','Design Patterns (POM/Factory)'],
+    checks: [
+      {label:'File Format Readable',status:'pass'},
+      {label:'ATS-Friendly Fonts Used',status:'pass'},
+      {label:'No Image-Based Text Found',status:'pass'},
+      {label:'Contact Info in Header/Footer',status:'fail'},
+      {label:'Measurable Achievements Present',status:'warn'},
+      {label:'Keywords Match Target Role',status:'fail'},
+      {label:'Consistent Date Formatting',status:'pass'},
+    ],
+    recs: [
+      {p:'high',title:'Add framework ownership context',body:'Change "Used Selenium" to "Designed and maintained a Selenium + TestNG framework supporting 4 applications, reducing regression time by 35%."'},
+      {p:'high',title:'Include architecture / strategy keywords',body:'Words like "framework design", "test strategy", "quality governance" are scanned for senior roles. Add them only where accurate.'},
+      {p:'med',title:'Quantify CI/CD involvement',body:'Instead of "worked with Jenkins", write: "Configured Jenkins pipeline for nightly regression execution, cutting feedback time from 24h to 2h."'},
+      {p:'low',title:'Add a professional summary targeting the role',body:'A 2–3 line summary at the top with the target job title and key capabilities significantly improves ATS ranking for that role.'},
+    ],
+  },
+
+  dev: {
+    score: 78,
+    strengths: ['JavaScript','React','Node.js','REST APIs','Git','Agile / Scrum','SQL','Unit Testing'],
+    missing: ['System Design','Microservices Architecture','Cloud (AWS/GCP/Azure)','Team Leadership','Performance Engineering','DevOps / IaC'],
+    checks: [
+      {label:'File Format Readable',status:'pass'},
+      {label:'No Text Boxes / Graphics Found',status:'warn'},
+      {label:'Standard Section Headings',status:'pass'},
+      {label:'Contact Info in Header/Footer',status:'pass'},
+      {label:'Quantified Achievements Present',status:'fail'},
+      {label:'Target Role Keywords Found',status:'warn'},
+      {label:'Consistent Date Formatting',status:'pass'},
+    ],
+    recs: [
+      {p:'high',title:'Add cloud technology experience',body:'Senior developer roles almost universally require cloud familiarity. If you have deployed to AWS/GCP/Azure even informally, describe it specifically.'},
+      {p:'high',title:'Quantify project impact',body:'Replace "built a dashboard" with "Built a real-time analytics dashboard serving 15k daily users, reducing report generation time by 60%."'},
+      {p:'med',title:'Remove creative resume graphics',body:'Columns, icons and infographic elements are often misread by ATS parsers. Use a clean, single-column, text-only layout for ATS submissions.'},
+      {p:'low',title:'Include system design language',body:'For senior / architect tracks, terms like "distributed systems", "scalability", "microservices" and "event-driven architecture" should appear in context.'},
+    ],
+  },
+
+  manager: {
+    score: 62,
+    strengths: ['Team Leadership','Stakeholder Management','Budgeting','Roadmap Planning','Agile Delivery','Hiring'],
+    missing: ['OKR / KPI Framework','Executive Reporting','P&L Ownership','Cross-functional Program Mgmt','Change Management Certification','Headcount Planning'],
+    checks: [
+      {label:'File Format Readable',status:'pass'},
+      {label:'ATS-Friendly Layout',status:'fail'},
+      {label:'Standard Section Headings',status:'pass'},
+      {label:'Contact Info in Header/Footer',status:'warn'},
+      {label:'Quantified Business Outcomes',status:'fail'},
+      {label:'Leadership Keywords Present',status:'warn'},
+      {label:'Consistent Date Formatting',status:'pass'},
+    ],
+    recs: [
+      {p:'high',title:'Quantify team and business impact',body:'Leadership roles are judged on outcomes. Replace "led a team" with "Led a 12-person cross-functional team, delivering 3 product launches on time and under budget, generating $2.4M ARR."'},
+      {p:'high',title:'Move to an ATS-clean single-column format',body:'Manager CVs often feature creative two-column or infographic layouts that break ATS parsing. Submit a plain single-column version for applications.'},
+      {p:'med',title:'Add OKR / metrics framework language',body:'Director+ roles expect fluency with goal-setting frameworks. Include: "Implemented OKR framework across 4 teams, improving delivery predictability by 28%."'},
+      {p:'low',title:'Include certifications or formal training',body:'PMP, Agile Coaching, or similar certifications signal professional investment and are often ATS-filtered criteria for senior management tracks.'},
+    ],
+  },
+};
+
+function detectProfile(current='', target='') {
+  const c = current.toLowerCase(), t = target.toLowerCase();
+  const all = c + ' ' + t;
+  if (/\b(qa|quality|tester|test|sdet|automation)\b/.test(all)) return 'qa';
+  if (/\b(dev|developer|engineer|swe|software|front|back|full.?stack|web)\b/.test(all)) return 'dev';
+  if (/\b(manager|lead|director|head|vp|cto|cio|chief|program|product)\b/.test(all)) return 'manager';
+  return 'default';
+}
+
+/* ── Score colour helpers ── */
+function scoreColor(s){return s>=80?'#16a34a':s>=60?'#ea580c':'#dc2626';}
+function scoreBand(s){
+  if(s>=80) return {cls:'band-green',icon:'🟢',label:'Strong Match'};
+  if(s>=60) return {cls:'band-orange',icon:'🟡',label:'Moderate Match'};
+  return {cls:'band-red',icon:'🔴',label:'Weak Match'};
+}
+function scoreDesc(s){
+  if(s>=80) return 'Your resume is well-optimised for this role. Focus on minor polish.';
+  if(s>=60) return 'Several improvements will meaningfully boost your ATS ranking.';
+  return 'Significant gaps detected. Prioritise the recommendations below.';
+}
+
+/* ── File handling ── */
+let fileAttached = false;
+function handleFile(input) {
+  if (!input.files.length) return;
+  const f = input.files[0];
+  const dz = document.getElementById('dropZone');
+  dz.classList.add('attached');
+  document.getElementById('attachedName').textContent = '📎 ' + f.name;
+  document.getElementById('attachedName').style.display = 'block';
+  document.getElementById('attachedSub').style.display = 'block';
+  fileAttached = true;
+}
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('hover'); });
+dz.addEventListener('dragleave', () => dz.classList.remove('hover'));
+dz.addEventListener('drop', e => {
+  e.preventDefault(); dz.classList.remove('hover');
+  const f = e.dataTransfer.files[0];
+  if (f) {
+    dz.classList.add('attached');
+    document.getElementById('attachedName').textContent = '📎 ' + f.name;
+    document.getElementById('attachedName').style.display = 'block';
+    document.getElementById('attachedSub').style.display = 'block';
+    fileAttached = true;
+  }
+});
+
+/* ── Analysis flow ── */
+function runAnalysis() {
+  const currentRole = document.getElementById('currentRole').value.trim() || 'Current Role';
+  const targetRole  = document.getElementById('targetRole').value.trim()  || 'Target Role';
+
+  document.getElementById('input-section').style.display = 'none';
+  document.getElementById('loading').style.display = 'block';
+
+  const steps = [
+    {text:'Parsing document structure',sub:'Scanning sections, headings and formatting…'},
+    {text:'Cross-referencing target role requirements',sub:'Mapping competency expectations for "' + targetRole + '"…'},
+    {text:'Identifying keyword gaps',sub:'Comparing resume terms against role requirements…'},
+    {text:'Scoring ATS compatibility',sub:'Calculating final match score and recommendations…'},
+  ];
+
+  let step = 0;
+  const bar = document.getElementById('ldBar');
+  const ldText = document.getElementById('ldText');
+  const ldSub  = document.getElementById('ldSub');
+
+  const tick = setInterval(() => {
+    step++;
+    const pct = Math.min(step * 25, 100);
+    bar.style.width = pct + '%';
+    if (step < steps.length) {
+      ldText.innerHTML = steps[step].text + '<span class="ld-dots"></span>';
+      ldSub.textContent = steps[step].sub;
+    }
+    if (step >= 4) {
+      clearInterval(tick);
+      setTimeout(() => showResults(currentRole, targetRole), 350);
+    }
+  }, 900);
+}
+
+function showResults(currentRole, targetRole) {
+  document.getElementById('loading').style.display = 'none';
+
+  const profile = detectProfile(currentRole, targetRole);
+  const data = ROLE_DATA[profile];
+
+  /* Banner */
+  document.getElementById('bannerTitle').textContent = currentRole + ' → ' + targetRole;
+  document.getElementById('bannerSub').textContent =
+    'ATS analysis complete. ' + data.recs.length + ' recommendations identified.';
+
+  /* Gauge */
+  const s = data.score;
+  const circumference = 2 * Math.PI * 64; // 402
+  const offset = circumference - (s / 100) * circumference;
+  const fill = document.getElementById('gaugeFill');
+  fill.style.stroke = scoreColor(s);
+  setTimeout(() => { fill.style.strokeDashoffset = offset; }, 80);
+  setTimeout(() => {
+    let cur = 0;
+    const target = s;
+    const el = document.getElementById('gaugePct');
+    const iv = setInterval(() => {
+      cur = Math.min(cur + 2, target);
+      el.textContent = cur + '%';
+      el.style.color = scoreColor(s);
+      if (cur >= target) clearInterval(iv);
+    }, 20);
+  }, 200);
+  const band = scoreBand(s);
+  document.getElementById('scoreBand').className = 'score-band ' + band.cls;
+  document.getElementById('scoreBand').textContent = band.icon + ' ' + band.label;
+  document.getElementById('gaugeDesc').textContent = scoreDesc(s);
+
+  /* ATS Checklist */
+  const cl = document.getElementById('checkList');
+  cl.innerHTML = data.checks.map(c => {
+    const icon = c.status==='pass'?'✓':c.status==='fail'?'✕':'!';
+    const cls  = 'ci-'+c.status;
+    const blbl = c.status==='pass'?'PASS':c.status==='fail'?'FAIL':'WARN';
+    const bcls = 'ck-badge ck-'+c.status;
+    return `<li><span class="ci ${cls}">${icon}</span><span class="ck-text">${c.label}</span><span class="${bcls}">${blbl}</span></li>`;
+  }).join('');
+
+  /* Gap analysis */
+  document.getElementById('gapTitle').textContent = currentRole + ' → ' + targetRole + ': Profile Gap';
+  document.getElementById('gapDesc').textContent =
+    'Based on your current role and target role, here\'s what your resume demonstrates and what\'s missing.';
+  const st = document.getElementById('strengthTags');
+  st.innerHTML = data.strengths.map(s =>
+    `<span class="tag tag-s"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>${s}</span>`
+  ).join('');
+  const mt = document.getElementById('missingTags');
+  mt.innerHTML = data.missing.map(m =>
+    `<span class="tag tag-m"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${m}</span>`
+  ).join('');
+
+  /* Recommendations */
+  document.getElementById('recDesc').textContent =
+    'Ranked by impact. Address High priority items first for the fastest ATS score improvement.';
+  const pMap = {high:'p-high',med:'p-med',low:'p-low'};
+  const pLbl = {high:'High Priority',med:'Medium',low:'Polish'};
+  document.getElementById('recList').innerHTML = data.recs.map((r,i) =>
+    `<li>
+      <div class="rec-num">${i+1}</div>
+      <div class="rec-body">
+        <strong>${r.title}<span class="priority-tag ${pMap[r.p]}">${pLbl[r.p]}</span></strong>
+        <span>${r.body}</span>
+      </div>
+    </li>`
+  ).join('');
+
+  document.getElementById('results').style.display = 'block';
+  document.getElementById('results').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function resetApp() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('input-section').style.display = 'block';
+  document.getElementById('currentRole').value = '';
+  document.getElementById('targetRole').value = '';
+  // reset drop zone
+  const dz = document.getElementById('dropZone');
+  dz.classList.remove('attached','hover');
+  document.getElementById('attachedName').style.display = 'none';
+  document.getElementById('attachedSub').style.display = 'none';
+  document.getElementById('ldBar').style.width = '0%';
+  document.getElementById('gaugePct').textContent = '0%';
+  document.getElementById('gaugeFill').style.strokeDashoffset = '402';
+  fileAttached = false;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
