@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Resume Career Gap & ATS Analyzer</title>
+<title>Resume ATS Analyzer</title>
 <style>
 /* ── Reset & Tokens ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -276,13 +276,71 @@ select option{background:var(--surface2);color:var(--text);}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
 @media(max-width:700px){.two-col{grid-template-columns:1fr;}}
 .disclaimer{font-size:11px;color:var(--muted);font-style:italic;padding:6px 0;}
+
+/* ════════════════ COMPETENCY MODEL BARS ════════════════ */
+.comp-model{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-bottom:18px;}
+.comp-card{background:var(--surface2);border-radius:12px;padding:14px 16px;border:1px solid var(--border);}
+.comp-card h4{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;display:flex;align-items:center;gap:7px;}
+.comp-card .pr-row{margin-bottom:6px;}
+
+/* ════════════════ EXP GAP TABLE ════════════════ */
+.gap-table{width:100%;border-collapse:collapse;font-size:12px;}
+.gap-table th{background:var(--surface2);padding:9px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border:1px solid var(--border);}
+.gap-table td{padding:9px 12px;border:1px solid var(--border);vertical-align:top;line-height:1.5;}
+.gap-table tr:hover td{background:rgba(255,255,255,.02);}
+.status-chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;}
+.sc-g{background:rgba(34,197,94,.15);color:var(--green);}
+.sc-y{background:rgba(245,158,11,.15);color:var(--yellow);}
+.sc-r{background:rgba(239,68,68,.15);color:var(--red);}
+
+/* ════════════════ SKILLS GAP 3-COL ════════════════ */
+.sg-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:8px;}
+@media(max-width:700px){.sg-grid{grid-template-columns:1fr;}}
+.sg-col h4{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;}
+.sg-col .chip-row .chip{font-size:11px;cursor:default;}
+.sg-col .chip{pointer-events:none;}
+
+/* ════════════════ ACCEPT / REJECT / EDIT ════════════════ */
+.are-item{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:10px;}
+.are-item strong{display:block;font-size:.88rem;margin-bottom:3px;}
+.are-item p{font-size:12px;color:var(--muted);margin-bottom:10px;}
+.are-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.are-btn{padding:5px 14px;border-radius:8px;border:1px solid;font-size:11px;font-weight:700;cursor:pointer;transition:.15s;background:transparent;}
+.are-accept{border-color:var(--green-border);color:var(--green);}
+.are-accept.active{background:var(--green-bg);}
+.are-reject{border-color:var(--red-border);color:var(--red);}
+.are-reject.active{background:var(--red-bg);opacity:.7;}
+.are-edit{border-color:var(--border);color:var(--muted);}
+.are-edit.active{border-color:var(--accent);color:var(--accent);}
+.are-edit-box{display:none;margin-top:9px;}
+.are-edit-box textarea{min-height:60px;font-size:12px;}
+
+/* ════════════════ SCORE IMPROVEMENT ════════════════ */
+.score-imp-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
+@media(max-width:600px){.score-imp-grid{grid-template-columns:1fr;}}
+.si-box{border-radius:12px;padding:18px;text-align:center;}
+.si-before{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.2);}
+.si-after{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);}
+.si-box h4{font-size:10px;text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;}
+.si-before h4{color:var(--red);}
+.si-after h4{color:var(--green);}
+.si-score{font-size:3rem;font-weight:900;line-height:1;}
+.si-delta{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.15);color:var(--green);border-radius:99px;padding:4px 12px;font-size:12px;font-weight:800;margin-top:8px;}
+
+/* ════════════════ MULTI-ROLE TABLE ════════════════ */
+.mr-table{width:100%;border-collapse:collapse;font-size:12px;}
+.mr-table th{background:var(--surface2);padding:9px 12px;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border:1px solid var(--border);text-align:left;}
+.mr-table td{padding:9px 12px;border:1px solid var(--border);vertical-align:middle;}
+.mr-table tr:hover td{background:rgba(255,255,255,.02);}
+.readiness-bar{height:7px;background:var(--surface);border-radius:99px;overflow:hidden;min-width:80px;}
+.readiness-fill{height:100%;border-radius:99px;}
 </style>
 </head>
 <body>
 
 <!-- ════ APP HEADER ════ -->
 <div class="app-header">
-  <h1>Resume Career Gap <span>&amp; ATS</span> Analyzer</h1>
+  <h1>Resume <span>ATS</span> Analyzer</h1>
   <div class="hdr-badges">
     <span class="badge">AI-Directional Assessment</span>
     <span class="badge" style="background:rgba(34,197,94,.15);color:#4ade80;border-color:#22c55e">No Backend</span>
@@ -294,6 +352,7 @@ select option{background:var(--surface2);color:var(--text);}
   <div class="tab active" data-page="dashboard">📊 Dashboard</div>
   <div class="tab" data-page="gaps">🔍 Career Gaps</div>
   <div class="tab" data-page="matrix">📋 Competency Matrix</div>
+  <div class="tab" data-page="compmodel">🧩 Competency Model</div>
   <div class="tab" data-page="aiwriting">🤖 AI Writing</div>
   <div class="tab" data-page="ats">✅ ATS Validator</div>
   <div class="tab" data-page="roadmap">🗺️ Career Roadmap</div>
@@ -548,6 +607,19 @@ select option{background:var(--surface2);color:var(--text);}
           <div class="pr-track"><div class="pr-fill" id="pExp" style="width:0%;background:linear-gradient(90deg,#d97706,#f59e0b)"></div></div>
         </div>
 
+        <!-- Overall Resume Score — 6th KPI gauge (R2-2) -->
+        <div class="gauge-card">
+          <div class="g-label">Overall Resume Score</div>
+          <div class="gw">
+            <svg width="110" height="110" viewBox="0 0 110 110">
+              <circle class="g-bg" cx="55" cy="55" r="46"/>
+              <circle class="g-fg" id="gOverall" cx="55" cy="55" r="46" stroke="#8b5cf6" stroke-dasharray="289" stroke-dashoffset="289"/>
+            </svg>
+            <div class="g-inner"><span class="g-pct" id="gpOverall" style="color:#8b5cf6;font-size:1.3rem">0</span><span class="g-sub">/100</span></div>
+          </div>
+          <div class="pr-track"><div class="pr-fill" id="pOverall" style="width:0%;background:linear-gradient(90deg,#7c3aed,#8b5cf6)"></div></div>
+        </div>
+
         <!-- AI-Like Writing — Speedometer -->
         <div class="gauge-card">
           <div class="g-label">AI-Like Writing</div>
@@ -586,13 +658,51 @@ select option{background:var(--surface2);color:var(--text);}
         <div class="sec-title needs-stag" style="margin-top:4px">⚠️ Needs Strengthening <span class="stag stag-y">— Areas</span></div>
         <div class="skill-grid" id="dashPartialGrid"></div>
       </div>
+
+      <!-- R2-8: Career Readiness Dimension Bars -->
+      <div class="section-wrapper">
+        <div class="sec-title">📐 Career Readiness Breakdown <span class="stag stag-b">By Dimension</span></div>
+        <div id="readinessDimBars"></div>
+      </div>
+
     </div>
 
     <!-- ─── PAGE: CAREER GAPS ─── -->
     <div id="page-gaps" class="page">
+
+      <!-- R2-4: Skills Gap 3-column -->
       <div class="section-wrapper">
-        <div class="sec-title">🔴 Missing From Resume <span class="stag stag-r">7 Critical Areas</span></div>
-        <div class="info-box">Identified by comparing your resume against Test Architect expectations. Recommendations apply only if you genuinely have the experience — never invent experience.</div>
+        <div class="sec-title">🧠 Skills Gap Analysis <span class="stag stag-b">Present · Partial · Missing</span></div>
+        <div class="sg-grid">
+          <div class="sg-col">
+            <h4 style="color:var(--green)">✅ Present</h4>
+            <div class="chip-row" id="sgPresent"></div>
+          </div>
+          <div class="sg-col">
+            <h4 style="color:var(--yellow)">⚠️ Partial</h4>
+            <div class="chip-row" id="sgPartial"></div>
+          </div>
+          <div class="sg-col">
+            <h4 style="color:var(--red)">❌ Missing</h4>
+            <div class="chip-row" id="sgMissing"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- R2-3: Experience Gap Table -->
+      <div class="section-wrapper">
+        <div class="sec-title">📊 Experience Gap Table <span class="stag stag-b">Responsibility Mapping</span></div>
+        <div style="overflow-x:auto">
+          <table class="gap-table">
+            <thead><tr><th>Target Responsibility</th><th>Resume Evidence</th><th>Status</th><th>Recommendation</th></tr></thead>
+            <tbody id="expGapBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section-wrapper">
+        <div class="sec-title">🔴 Missing From Resume <span class="stag stag-r" id="missingCount">7 Critical Areas</span></div>
+        <div class="info-box">Identified by comparing your resume against role expectations. Recommendations apply only if you genuinely have the experience — never invent experience.</div>
         <div class="p-item p-high" style="margin-bottom:10px"><strong>🔴 Architecture &amp; Framework Design — Not Found</strong><p>If you have designed automation frameworks, describe the architecture, design principles, reusable components, reporting, configuration, test data management and CI/CD integration you owned.</p></div>
         <div class="p-item p-high" style="margin-bottom:10px"><strong>🔴 Test Strategy — Not Found</strong><p>Add examples where you defined test strategy, automation strategy, regression strategy, risk-based testing or quality approach for a project or team.</p></div>
         <div class="p-item p-high" style="margin-bottom:10px"><strong>🔴 Mentoring — Not Found</strong><p>If applicable, mention mentoring junior testers, conducting technical training, code reviews or helping team members adopt automation practices.</p></div>
@@ -662,6 +772,38 @@ select option{background:var(--surface2);color:var(--text);}
       </div>
     </div>
 
+    <!-- ─── PAGE: COMPETENCY MODEL (R2-5) ─── -->
+    <div id="page-compmodel" class="page">
+      <div class="section-wrapper">
+        <div class="sec-title">🧩 Target Role Competency Model <span class="stag stag-b" id="compModelRoleTag">Test Architect</span></div>
+        <div class="info-box">Competency levels are directional estimates based on resume content vs. role expectations. Use as a self-assessment guide, not an objective measure.</div>
+        <div class="comp-model" id="compModelGrid"></div>
+      </div>
+      <!-- R2-6: Achievement Analysis -->
+      <div class="section-wrapper">
+        <div class="sec-title">🏆 Achievement Analysis <span class="stag stag-y">Bullet Scorer</span></div>
+        <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;margin-bottom:18px">
+          <div>
+            <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Achievement Strength Score</div>
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <span id="achieveScore" style="font-size:3rem;font-weight:900;color:var(--yellow)">42</span>
+              <span style="color:var(--muted);font-size:.9rem">/100</span>
+            </div>
+            <div id="achieveBand" style="margin-top:6px;font-size:12px;color:var(--yellow);font-weight:700">⚠️ Needs Work</div>
+          </div>
+          <div style="flex:1;min-width:220px">
+            <div class="pr-row"><div class="pr-labels"><span>Quantified Bullets</span><span id="achieveQuantPct">20%</span></div><div class="pr-track"><div class="pr-fill" id="achieveQuantBar" style="width:20%;background:var(--yellow)"></div></div></div>
+            <div class="pr-row" style="margin-top:6px"><div class="pr-labels"><span>Action-Led Bullets</span><span id="achieveActionPct">55%</span></div><div class="pr-track"><div class="pr-fill" id="achieveActionBar" style="width:55%;background:var(--cyan)"></div></div></div>
+            <div class="pr-row" style="margin-top:6px"><div class="pr-labels"><span>Specific Evidence</span><span id="achieveEvPct">35%</span></div><div class="pr-track"><div class="pr-fill" id="achieveEvBar" style="width:35%;background:var(--green)"></div></div></div>
+          </div>
+        </div>
+        <div id="achieveProblems"></div>
+        <div class="divider"></div>
+        <div style="font-size:12px;font-weight:700;color:var(--accent);margin-bottom:10px">💡 How to Strengthen Your Achievements</div>
+        <div id="achieveHowTo"></div>
+      </div>
+    </div>
+
     <!-- ─── PAGE: AI WRITING ─── -->
     <div id="page-aiwriting" class="page">
       <div class="section-wrapper">
@@ -726,6 +868,25 @@ select option{background:var(--surface2);color:var(--text);}
           <div class="rule-item"><input type="checkbox" checked/> Preserve my writing style</div>
         </div>
         <button class="btn btn-primary" style="margin-top:14px">✨ Make My Resume More Natural</button>
+      </div>
+
+      <!-- R2-10: Score Improvement Before / After -->
+      <div class="section-wrapper">
+        <div class="sec-title">📈 Score Improvement Projection <span class="stag stag-g">Before vs After</span></div>
+        <div class="score-imp-grid">
+          <div class="si-box si-before">
+            <h4>📄 Current Resume</h4>
+            <div class="si-score" id="siBeforeScore" style="color:var(--red)">—</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">Estimated overall score</div>
+          </div>
+          <div class="si-box si-after">
+            <h4>✨ After Improvements</h4>
+            <div class="si-score" id="siAfterScore" style="color:var(--green)">—</div>
+            <div class="si-delta" id="siDelta" style="display:none">▲ <span id="siDeltaVal">+0</span> pts projected gain</div>
+          </div>
+        </div>
+        <div id="siImprovements"></div>
+        <div class="info-box" style="margin-top:12px">ℹ️ Projected score is directional — based on addressing the improvements listed. Actual ATS scores vary by system and job description.</div>
       </div>
     </div>
 
@@ -827,14 +988,40 @@ select option{background:var(--surface2);color:var(--text);}
           <div class="section-wrapper"><div class="sec-title">🤝 Leadership Capabilities</div><div class="chip-row"><span class="chip">Technical Decision-Making</span><span class="chip">Team Mentoring</span><span class="chip">Stakeholder Reporting</span><span class="chip">Code Reviews</span><span class="chip">Standard-Setting</span></div></div>
         </div>
       </div>
+
+      <!-- R2-7: Multiple Target Roles comparison -->
+      <div class="section-wrapper" style="margin-top:20px">
+        <div class="sec-title">🎯 Multiple Target Role Readiness <span class="stag stag-b">From Your Current Role</span></div>
+        <div class="info-box">Readiness scores are directional estimates comparing your resume profile against common role expectations.</div>
+        <div style="overflow-x:auto">
+          <table class="mr-table">
+            <thead><tr><th>Target Role</th><th>Readiness</th><th>Progress</th><th>Key Gaps</th><th>Effort</th></tr></thead>
+            <tbody id="multiRoleBody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- ─── PAGE: ACTION PLAN ─── -->
     <div id="page-actionplan" class="page">
+
+      <!-- R2-9: Accept / Reject / Edit controls -->
       <div class="section-wrapper">
-        <div class="sec-title">🎯 Your Top 10 Resume Improvements <span class="stag stag-b">Section 15</span></div>
-        <ul class="action-list" id="actionList"></ul>
+        <div class="sec-title">🎯 Top Resume Improvements <span class="stag stag-b" id="actionCountTag">Actions</span></div>
+        <div class="info-box">Review each suggestion. Accept what applies, reject what doesn't fit, or edit to match your reality.</div>
+        <div id="areList"></div>
       </div>
+
+      <!-- Score summary -->
+      <div class="section-wrapper">
+        <div class="sec-title">📋 Quick Stats</div>
+        <div class="stat-row" id="areSummaryRow">
+          <div class="stat-pill"><span class="dot dot-g"></span> Accepted: <strong id="areAcceptCount">0</strong></div>
+          <div class="stat-pill"><span class="dot dot-r"></span> Rejected: <strong id="areRejectCount">0</strong></div>
+          <div class="stat-pill"><span class="dot dot-y"></span> Edited: <strong id="areEditCount">0</strong></div>
+        </div>
+      </div>
+
       <div class="dl-bar">
         <div>
           <h3>📥 Download Analysis Report</h3>
@@ -860,8 +1047,49 @@ select option{background:var(--surface2);color:var(--text);}
    Key: computed from current+target role categories.
    Each entry has: strong[], partial[], missing[],
    matrixRows[], atsScore, career, skills, exp, aiWrite,
+   overall, dims[], sgPresent[], sgPartial[], sgMissing[],
+   expGaps[], compModel{}, achieve{}, multiRoles[], scoreImps[]
    checks[], recs[], actions[]
 ══════════════════════════════════════════════════ */
+
+/* ── Shared multi-role readiness helper data ── */
+const MULTI_ROLE_PROFILES = {
+  tester:{
+    roles:[
+      {role:'QA Lead',       pct:78, gaps:'Formal leadership, team management', effort:'Low'},
+      {role:'SDET',          pct:72, gaps:'Deep programming, OOP patterns', effort:'Medium'},
+      {role:'Test Architect', pct:58, gaps:'Architecture design, strategy, governance', effort:'High'},
+      {role:'QA Manager',    pct:52, gaps:'People management, stakeholder reporting', effort:'High'},
+      {role:'DevOps Engineer',pct:38, gaps:'CI/CD ownership, cloud, infrastructure', effort:'Very High'},
+    ]
+  },
+  developer:{
+    roles:[
+      {role:'Senior Software Engineer', pct:82, gaps:'System design at scale, cloud architecture', effort:'Low'},
+      {role:'Tech Lead',       pct:65, gaps:'Technical leadership, mentoring', effort:'Medium'},
+      {role:'Engineering Manager', pct:52, gaps:'People management, roadmap', effort:'High'},
+      {role:'DevOps Engineer', pct:60, gaps:'CI/CD, IaC, cloud deployment', effort:'Medium'},
+      {role:'Product Manager', pct:40, gaps:'Product vision, stakeholder mgmt, OKRs', effort:'Very High'},
+    ]
+  },
+  manager:{
+    roles:[
+      {role:'Director of Engineering', pct:76, gaps:'Org design, executive reporting', effort:'Medium'},
+      {role:'VP Engineering',  pct:62, gaps:'P&L, board communication, M&A', effort:'High'},
+      {role:'CTO',             pct:48, gaps:'Technology vision, fundraising context', effort:'Very High'},
+      {role:'Product Director', pct:58, gaps:'Product strategy, go-to-market', effort:'High'},
+      {role:'Agile Coach',     pct:70, gaps:'Formal coaching certification, org change', effort:'Medium'},
+    ]
+  },
+  other:{
+    roles:[
+      {role:'Senior Role',      pct:65, gaps:'Quantified achievements, leadership signals', effort:'Medium'},
+      {role:'Management Track', pct:50, gaps:'People management, strategic ownership', effort:'High'},
+      {role:'Technical Expert', pct:70, gaps:'Deep technical specialisation', effort:'Medium'},
+      {role:'Cross-functional Lead', pct:55, gaps:'Stakeholder management, OKRs', effort:'High'},
+    ]
+  }
+};
 
 // ── Category classifier ──
 function roleCategory(r=''){
@@ -880,7 +1108,38 @@ const PAIR_DATA = {
 
   // ── tester → tester (same role) ──
   'tester:tester':{
-    atsScore:75, career:82, skills:78, exp:80, aiWrite:30,
+    atsScore:75, career:82, skills:78, exp:80, aiWrite:30, overall:78,
+    dims:[
+      {label:'Technical Skills',val:82,color:'#6366f1'},{label:'Test Coverage',val:78,color:'#22c55e'},
+      {label:'Automation',val:65,color:'#06b6d4'},{label:'Leadership',val:40,color:'#f59e0b'},
+      {label:'Strategy',val:38,color:'#f97316'},{label:'Domain Knowledge',val:80,color:'#8b5cf6'},
+    ],
+    sgPresent:['Manual Testing','Functional Testing','Defect Management','Test Planning','Agile/Scrum'],
+    sgPartial:['Automation','API Testing','SQL Queries','Performance Basics'],
+    sgMissing:['Quantified Outcomes','Regression Ownership','Test Metrics','CI/CD'],
+    expGaps:[
+      {resp:'Design and execute test plans',ev:'✅ Test plans written for features',status:'g',rec:'Add scope and sign-off context'},
+      {resp:'Own regression cycle',ev:'⚠️ Regression testing mentioned',status:'y',rec:'Clarify you own the regression suite selection'},
+      {resp:'Report quality metrics',ev:'❌ Not mentioned',status:'r',rec:'If applicable, add defect rates or coverage %'},
+      {resp:'Mentor junior testers',ev:'❌ Not mentioned',status:'r',rec:'Add if you have supported or onboarded colleagues'},
+    ],
+    compModel:{
+      Technical:    [{name:'Manual Testing',val:90},{name:'Automation',val:60},{name:'API Testing',val:55},{name:'SQL',val:55}],
+      Coverage:     [{name:'Functional',val:88},{name:'Regression',val:72},{name:'Integration',val:50},{name:'Performance',val:35}],
+      Strategy:     [{name:'Test Planning',val:70},{name:'Risk-Based Testing',val:40},{name:'Test Governance',val:25}],
+      Leadership:   [{name:'Cross-team Collab',val:55},{name:'Mentoring',val:30},{name:'Stakeholder Comms',val:40}],
+      Business:     [{name:'Domain Knowledge',val:72},{name:'Agile/Scrum',val:80},{name:'Product Awareness',val:60}],
+    },
+    achieve:{score:55,quantPct:30,actionPct:65,evPct:50,
+      problems:['Limited quantified results in experience bullets','Several bullets start with passive language ("Responsible for")','No achievement metrics (defects caught, coverage %, speed improvements)'],
+      howTo:['Replace "Performed testing on" with "Led end-to-end testing of [product], identifying [X] critical defects"','Add numbers where available: test case counts, sprint coverage, defect severity',"Use action verbs: Designed, Built, Identified, Improved, Led, Delivered"],
+    },
+    scoreImprovements:[
+      {action:'Add quantified defect counts or coverage %',gain:6},
+      {action:'Rewrite passive bullets with action verbs',gain:5},
+      {action:'Add regression ownership statement',gain:4},
+      {action:'Improve professional summary',gain:3},
+    ],
     strong:[
       {name:'Test Execution',ev:'"Executed functional and regression test cycles across multiple releases."'},
       {name:'Defect Management',ev:'"Tracked and managed defect lifecycle in JIRA."'},
@@ -926,7 +1185,41 @@ const PAIR_DATA = {
 
   // ── tester → test architect ──
   'tester:test-architect':{
-    atsScore:68, career:58, skills:64, exp:61, aiWrite:34,
+    atsScore:68, career:58, skills:64, exp:61, aiWrite:34, overall:62,
+    dims:[
+      {label:'Technical Skills',val:75,color:'#6366f1'},{label:'Automation Depth',val:65,color:'#22c55e'},
+      {label:'Architecture',val:18,color:'#ef4444'},{label:'Leadership',val:30,color:'#f59e0b'},
+      {label:'Strategy',val:20,color:'#f97316'},{label:'Domain Knowledge',val:70,color:'#8b5cf6'},
+    ],
+    sgPresent:['Selenium','API Testing','TestNG','SQL','JIRA','Postman','Regression Testing'],
+    sgPartial:['CI/CD (Jenkins)','Technical Leadership','Framework Maintenance','Risk-Based Testing'],
+    sgMissing:['Test Architecture','Design Patterns','Test Strategy','Mentoring','Quality Governance','Test Governance'],
+    expGaps:[
+      {resp:'Design end-to-end test architecture',ev:'❌ Scripts written, no architecture evidence',status:'r',rec:'If applicable, describe the architectural decisions you made for your automation framework'},
+      {resp:'Define testing strategy for projects/teams',ev:'❌ Not found',status:'r',rec:'Add any examples where you set the test approach, prioritisation logic, or coverage targets'},
+      {resp:'Integrate automation into CI/CD pipelines',ev:'⚠️ "Used Jenkins" mentioned',status:'y',rec:'Describe what you configured — pipelines, triggers, notifications — not just that you used it'},
+      {resp:'Mentor and guide junior testers',ev:'❌ Not mentioned',status:'r',rec:'Add if you have onboarded, trained, or reviewed work of others'},
+      {resp:'Apply design patterns (POM, Factory, Builder)',ev:'❌ Not mentioned',status:'r',rec:'Reference the pattern name if you genuinely used it'},
+      {resp:'Establish quality standards / governance',ev:'❌ Not found',status:'r',rec:'If you introduced any standard or process, document it'},
+    ],
+    compModel:{
+      Technical:    [{name:'Selenium / Playwright',val:80},{name:'API Automation',val:75},{name:'SQL',val:65},{name:'Java/Python',val:60}],
+      Architecture: [{name:'Framework Design',val:25},{name:'Design Patterns',val:15},{name:'Scalability',val:20},{name:'Reusable Components',val:30}],
+      Strategy:     [{name:'Test Strategy',val:20},{name:'Risk-Based Testing',val:35},{name:'Test Governance',val:15},{name:'Quality Planning',val:25}],
+      Leadership:   [{name:'Technical Leadership',val:35},{name:'Mentoring',val:10},{name:'Code Reviews',val:40},{name:'Standards',val:20}],
+      Business:     [{name:'Stakeholder Comms',val:40},{name:'CI/CD',val:55},{name:'Agile/Scrum',val:70},{name:'Domain Knowledge',val:65}],
+    },
+    achieve:{score:42,quantPct:20,actionPct:55,evPct:35,
+      problems:['No quantified outcomes in automation bullets','Bullets describe tool usage, not design decisions or impact','Missing evidence of ownership ("designed", "defined", "led", "established")'],
+      howTo:['Change "Used Selenium" → "Designed a Selenium + TestNG framework for [X] applications, with POM architecture and Jenkins CI integration"','Add scope: number of tests, applications covered, execution time savings',"Lead with ownership verbs: Architected, Defined, Designed, Led, Established"],
+    },
+    scoreImprovements:[
+      {action:'Add framework ownership and architecture language',gain:9},
+      {action:'Add test strategy / governance keywords',gain:7},
+      {action:'Quantify CI/CD contribution',gain:5},
+      {action:'Add design pattern references',gain:4},
+      {action:'Add professional summary with architect focus',gain:4},
+    ],
     strong:[
       {name:'Test Execution',ev:'"Executed functional and regression test cycles across 3 releases."'},
       {name:'Functional Testing',ev:'"Performed end-to-end functional testing for web and mobile apps."'},
@@ -982,7 +1275,38 @@ const PAIR_DATA = {
 
   // ── tester → qa manager ──
   'tester:qa-manager':{
-    atsScore:60, career:52, skills:55, exp:58, aiWrite:36,
+    atsScore:60, career:52, skills:55, exp:58, aiWrite:36, overall:55,
+    dims:[
+      {label:'Technical QA',val:78,color:'#6366f1'},{label:'Automation',val:60,color:'#22c55e'},
+      {label:'People Management',val:8,color:'#ef4444'},{label:'Stakeholder Mgmt',val:15,color:'#f59e0b'},
+      {label:'Strategy',val:20,color:'#f97316'},{label:'Process Design',val:30,color:'#8b5cf6'},
+    ],
+    sgPresent:['Manual Testing','Defect Management','Agile/Scrum','JIRA','Functional Testing'],
+    sgPartial:['Process Improvement','Cross-team Collaboration','Reporting'],
+    sgMissing:['People Management','Stakeholder Reporting','Quality Strategy','KPIs/Metrics','Hiring','Resource Planning'],
+    expGaps:[
+      {resp:'Manage and develop a QA team',ev:'❌ No team management mentioned',status:'r',rec:'If applicable, note any informal leadership, onboarding, or team coordination'},
+      {resp:'Report quality metrics to stakeholders',ev:'❌ Not found',status:'r',rec:'Add any defect summaries, coverage reports, or sprint quality data you shared with stakeholders'},
+      {resp:'Design and own QA processes',ev:'⚠️ Process improvement hinted',status:'y',rec:'State exactly which process you introduced or improved and what the outcome was'},
+      {resp:'Set team quality targets / SLAs',ev:'❌ Not found',status:'r',rec:'If you have tracked or contributed to quality benchmarks, include them'},
+    ],
+    compModel:{
+      Technical:    [{name:'QA Execution',val:85},{name:'Automation',val:60},{name:'API Testing',val:55},{name:'Defect Analysis',val:80}],
+      Management:   [{name:'People Management',val:10},{name:'Hiring',val:5},{name:'Performance Reviews',val:5},{name:'Resource Planning',val:10}],
+      Strategy:     [{name:'Quality Strategy',val:20},{name:'Process Design',val:30},{name:'KPI Ownership',val:15},{name:'SLA Management',val:10}],
+      Leadership:   [{name:'Team Leadership',val:15},{name:'Stakeholder Comms',val:20},{name:'Conflict Resolution',val:10}],
+      Business:     [{name:'Domain Knowledge',val:72},{name:'Agile/Scrum',val:78},{name:'Risk Management',val:40}],
+    },
+    achieve:{score:38,quantPct:15,actionPct:50,evPct:30,
+      problems:['No management or leadership outcomes','No team size, team impact or people development results','Achievements are technical, not leadership-oriented'],
+      howTo:['Frame existing coordination as leadership: "Coordinated testing across 3 sprints, mentoring 2 junior testers"','Add any quality metrics you contributed to: "Contributed to reducing defect escape rate by X%"','Reframe process contributions as ownership: "Introduced daily defect triage, reducing average resolution time"'],
+    },
+    scoreImprovements:[
+      {action:'Add informal leadership or coordination examples',gain:8},
+      {action:'Reframe achievements as business outcomes',gain:7},
+      {action:'Add quality metrics ownership',gain:6},
+      {action:'Add management-focused professional summary',gain:4},
+    ],
     strong:[
       {name:'Test Execution',ev:'Solid hands-on testing experience across functional and regression.'},
       {name:'Defect Management',ev:'Proven defect lifecycle tracking in JIRA.'},
@@ -1028,7 +1352,38 @@ const PAIR_DATA = {
 
   // ── developer → developer (same) ──
   'developer:developer':{
-    atsScore:76, career:80, skills:74, exp:77, aiWrite:28,
+    atsScore:76, career:80, skills:74, exp:77, aiWrite:28, overall:76,
+    dims:[
+      {label:'Programming',val:85,color:'#6366f1'},{label:'System Design',val:60,color:'#22c55e'},
+      {label:'Cloud / Infra',val:35,color:'#ef4444'},{label:'CI/CD',val:55,color:'#f59e0b'},
+      {label:'Code Quality',val:70,color:'#06b6d4'},{label:'Agile Delivery',val:80,color:'#8b5cf6'},
+    ],
+    sgPresent:['Core Programming','Git/Version Control','REST APIs','Unit Testing','Agile/Scrum','Documentation'],
+    sgPartial:['System Design','CI/CD','Code Reviews','Performance Optimisation'],
+    sgMissing:['Cloud Deployment','Quantified Impact','Infrastructure as Code','Architecture Patterns'],
+    expGaps:[
+      {resp:'Build and deploy scalable systems',ev:'⚠️ Projects built — no scale or deployment detail',status:'y',rec:'Add user counts, throughput, or deployment environment context'},
+      {resp:'Contribute to system architecture decisions',ev:'⚠️ Some architecture decisions noted',status:'y',rec:'Describe the decision, trade-off considered, and outcome'},
+      {resp:'Maintain CI/CD pipelines',ev:'⚠️ CI/CD usage mentioned',status:'y',rec:'Describe what you configured, not just what you used'},
+      {resp:'Deploy and manage cloud infrastructure',ev:'❌ Not mentioned',status:'r',rec:'If applicable, note any AWS/GCP/Azure experience, even from personal projects'},
+    ],
+    compModel:{
+      Technical:    [{name:'Core Language',val:88},{name:'Frameworks',val:75},{name:'Testing',val:70},{name:'SQL/DB',val:65}],
+      Architecture: [{name:'System Design',val:60},{name:'API Design',val:70},{name:'Scalability',val:45},{name:'Design Patterns',val:55}],
+      DevOps:       [{name:'CI/CD',val:55},{name:'Cloud',val:35},{name:'Docker/K8s',val:40},{name:'IaC',val:25}],
+      Quality:      [{name:'Code Review',val:65},{name:'Unit Tests',val:70},{name:'Documentation',val:72}],
+      Business:     [{name:'Agile',val:82},{name:'Stakeholder Comms',val:55},{name:'Product Thinking',val:50}],
+    },
+    achieve:{score:58,quantPct:25,actionPct:70,evPct:45,
+      problems:['Projects described by features built, not outcomes delivered','No user scale, performance improvement, or business impact numbers','Cloud and deployment context missing from most entries'],
+      howTo:['Add user scale: "Served [X] daily users", "Handled [X] requests/second"','Quantify improvements: "Reduced API response time by 40%", "Cut build time by 15 minutes"','Frame system design decisions: "Chose microservices over monolith to support independent scaling"'],
+    },
+    scoreImprovements:[
+      {action:'Quantify user scale and project impact',gain:9},
+      {action:'Add cloud/deployment experience',gain:7},
+      {action:'Describe architecture decisions with rationale',gain:5},
+      {action:'Show code review standards ownership',gain:3},
+    ],
     strong:[
       {name:'Core Language Skills',ev:'Solid programming fundamentals demonstrated across projects.'},
       {name:'Version Control (Git)',ev:'Git-based workflow including branching and PRs shown.'},
@@ -1072,7 +1427,38 @@ const PAIR_DATA = {
 
   // ── developer → manager ──
   'developer:manager':{
-    atsScore:62, career:55, skills:58, exp:60, aiWrite:35,
+    atsScore:62, career:55, skills:58, exp:60, aiWrite:35, overall:58,
+    dims:[
+      {label:'Technical Depth',val:85,color:'#6366f1'},{label:'Delivery',val:80,color:'#22c55e'},
+      {label:'People Management',val:8,color:'#ef4444'},{label:'Stakeholder Mgmt',val:15,color:'#f59e0b'},
+      {label:'Roadmap / OKRs',val:10,color:'#f97316'},{label:'Mentoring',val:30,color:'#8b5cf6'},
+    ],
+    sgPresent:['Programming Skills','Delivery','Code Review','Agile/Scrum','Git'],
+    sgPartial:['Team Collaboration','Mentoring','Cross-team Work'],
+    sgMissing:['People Management','Roadmap Planning','OKR Framework','Stakeholder Reporting','Budget Awareness','Hiring'],
+    expGaps:[
+      {resp:'Manage and grow engineering team',ev:'❌ No people management evidence',status:'r',rec:'Even informal team lead activities count — note them if accurate'},
+      {resp:'Drive roadmap and delivery planning',ev:'❌ Sprint-level delivery only',status:'r',rec:'Describe any planning contributions beyond single sprints'},
+      {resp:'Communicate technical vision to stakeholders',ev:'❌ Not found',status:'r',rec:'Add any presentations, status reports, or product reviews you led'},
+      {resp:'Set and measure engineering metrics / OKRs',ev:'❌ Not found',status:'r',rec:'If you tracked sprint velocity, code quality, or team health — add it'},
+    ],
+    compModel:{
+      Technical:    [{name:'Engineering Depth',val:88},{name:'System Design',val:65},{name:'Architecture',val:55},{name:'DevOps',val:50}],
+      Leadership:   [{name:'People Management',val:8},{name:'Mentoring',val:30},{name:'Hiring',val:5},{name:'Feedback',val:20}],
+      Strategy:     [{name:'Roadmap',val:10},{name:'OKR / KPIs',val:12},{name:'Stakeholder Mgmt',val:18},{name:'Budget',val:8}],
+      Delivery:     [{name:'Sprint Delivery',val:82},{name:'Cross-team Collab',val:55},{name:'Risk Management',val:40}],
+      Business:     [{name:'Product Awareness',val:50},{name:'Domain Knowledge',val:65},{name:'Business Impact',val:35}],
+    },
+    achieve:{score:35,quantPct:20,actionPct:65,evPct:30,
+      problems:['All achievements are technical — none are leadership or business outcomes','No team impact, delivery metrics, or stakeholder communication evidence','Missing reframing: technical wins need business context'],
+      howTo:['Reframe: "Optimised API" → "Reduced API latency by 60%, improving checkout completion rate"','Add team context: "Led code review process for 5-person team, reducing post-deploy defects"','Connect delivery to business: "Delivered [feature] 2 weeks ahead of schedule, enabling product launch"'],
+    },
+    scoreImprovements:[
+      {action:'Add informal leadership examples',gain:9},
+      {action:'Reframe all technical wins as business outcomes',gain:8},
+      {action:'Add mentoring/knowledge transfer evidence',gain:5},
+      {action:'Add management-track summary line',gain:4},
+    ],
     strong:[
       {name:'Technical Depth',ev:'Strong hands-on engineering background.'},
       {name:'Delivery Experience',ev:'Sprint-based feature delivery demonstrated.'},
@@ -1117,7 +1503,38 @@ const PAIR_DATA = {
 
   // ── manager → manager (same) ──
   'manager:manager':{
-    atsScore:73, career:78, skills:72, exp:75, aiWrite:40,
+    atsScore:73, career:78, skills:72, exp:75, aiWrite:40, overall:74,
+    dims:[
+      {label:'People Management',val:80,color:'#6366f1'},{label:'Stakeholder Mgmt',val:78,color:'#22c55e'},
+      {label:'OKR / KPIs',val:55,color:'#f59e0b'},{label:'Budget',val:50,color:'#f97316'},
+      {label:'Executive Comms',val:30,color:'#ef4444'},{label:'Agile Delivery',val:80,color:'#8b5cf6'},
+    ],
+    sgPresent:['Team Leadership','Stakeholder Management','Agile Delivery','Hiring','Onboarding','Performance Reviews'],
+    sgPartial:['OKR Framework','Budget Awareness','Executive Reporting'],
+    sgMissing:['Board-Level Communication','Organisational Design','P&L Ownership','Vendor Contracts'],
+    expGaps:[
+      {resp:'Lead teams and drive performance',ev:'✅ Team leadership clearly demonstrated',status:'g',rec:'Quantify: team size, retention, performance improvement'},
+      {resp:'Own and report against OKRs / KPIs',ev:'⚠️ Goal-setting mentioned',status:'y',rec:'Describe the specific framework used and the outcomes measured'},
+      {resp:'Manage budget and headcount',ev:'⚠️ Cost awareness noted',status:'y',rec:'Add any budget you managed, even indirectly, with amounts where possible'},
+      {resp:'Report to executive leadership / board',ev:'❌ Not found',status:'r',rec:'If applicable, describe any QBR presentations, board updates, or C-suite briefings you led'},
+    ],
+    compModel:{
+      Leadership:   [{name:'Team Management',val:82},{name:'Coaching',val:70},{name:'Conflict Resolution',val:65},{name:'Hiring',val:80}],
+      Strategy:     [{name:'OKR / KPIs',val:58},{name:'Roadmap',val:65},{name:'Budget',val:52},{name:'Org Design',val:30}],
+      Communication:[{name:'Stakeholder Mgmt',val:80},{name:'Executive Comms',val:35},{name:'Board Reporting',val:25},{name:'Change Mgmt',val:55}],
+      Delivery:     [{name:'Agile Leadership',val:82},{name:'Cross-team',val:75},{name:'Risk Management',val:60}],
+      Business:     [{name:'Domain Knowledge',val:70},{name:'P&L Awareness',val:50},{name:'Vendor Mgmt',val:45}],
+    },
+    achieve:{score:62,quantPct:40,actionPct:75,evPct:55,
+      problems:['Team size and impact not quantified in most bullets','Business and financial outcomes missing from leadership entries','Executive communication experience not demonstrated'],
+      howTo:['Quantify team: "Led 12-person cross-functional team delivering [X] per quarter"','Add business outcomes: "Reduced team attrition from 28% to 12% through restructured onboarding"','Frame OKR ownership: "Defined and measured OKRs for 4 squads, improving delivery predictability by 28%"'],
+    },
+    scoreImprovements:[
+      {action:'Quantify team size and business impact',gain:8},
+      {action:'Add OKR/KPI framework ownership evidence',gain:6},
+      {action:'Move to ATS single-column format',gain:5},
+      {action:'Add executive communication examples',gain:4},
+    ],
     strong:[
       {name:'Team Leadership',ev:'Direct report management demonstrated.'},
       {name:'Stakeholder Management',ev:'Cross-functional stakeholder engagement shown.'},
@@ -1161,7 +1578,38 @@ const PAIR_DATA = {
 
   // ── fallback ──
   'other:other':{
-    atsScore:70, career:65, skills:62, exp:63, aiWrite:35,
+    atsScore:70, career:65, skills:62, exp:63, aiWrite:35, overall:65,
+    dims:[
+      {label:'Core Competency',val:72,color:'#6366f1'},{label:'Domain Knowledge',val:68,color:'#22c55e'},
+      {label:'Leadership Signals',val:40,color:'#f59e0b'},{label:'Target Keywords',val:30,color:'#ef4444'},
+      {label:'Quantified Impact',val:25,color:'#f97316'},{label:'Agile/Delivery',val:60,color:'#8b5cf6'},
+    ],
+    sgPresent:['Core Competency','Domain Knowledge','Communication','Problem Solving'],
+    sgPartial:['Leadership Signals','Quantified Impact','Process Contribution'],
+    sgMissing:['Target Role Keywords','Measurable Achievements','Role-specific Certifications','Strategic Ownership'],
+    expGaps:[
+      {resp:'Demonstrate role-specific expertise',ev:'⚠️ General competency shown — role-specific depth unclear',status:'y',rec:'Mirror exact language from target role job descriptions'},
+      {resp:'Show measurable outcomes',ev:'❌ Outcomes mentioned without metrics',status:'r',rec:'Add any quantified result — time saved, quality improved, scale achieved'},
+      {resp:'Demonstrate leadership or ownership',ev:'⚠️ Some ownership language noted',status:'y',rec:'Be explicit about what you owned, decided, or were accountable for'},
+      {resp:'Certifications relevant to target role',ev:'❌ None mentioned',status:'r',rec:'Research and add any certifications that align to the target role'},
+    ],
+    compModel:{
+      Core:         [{name:'Domain Expertise',val:72},{name:'Technical Skills',val:65},{name:'Problem Solving',val:70}],
+      Communication:[{name:'Stakeholder Comms',val:55},{name:'Cross-team Collab',val:60},{name:'Reporting',val:45}],
+      Strategy:     [{name:'Strategic Thinking',val:40},{name:'Ownership',val:42},{name:'Planning',val:38}],
+      Leadership:   [{name:'Team Influence',val:40},{name:'Mentoring',val:30},{name:'Decision Making',val:45}],
+      Business:     [{name:'Business Acumen',val:50},{name:'Agile/Scrum',val:60},{name:'Metrics Awareness',val:35}],
+    },
+    achieve:{score:45,quantPct:20,actionPct:55,evPct:35,
+      problems:['Achievements are generic — could apply to any role','No quantified outcomes — no numbers, percentages, or scale','Missing role-specific context and impact language'],
+      howTo:['Add numbers to every achievement: users, time, cost, quality','Use role-specific language matching the target job description','Frame achievements as outcomes: "improved X by Y" rather than "worked on X"'],
+    },
+    scoreImprovements:[
+      {action:'Add target role keywords throughout resume',gain:9},
+      {action:'Quantify every major achievement',gain:8},
+      {action:'Add professional summary targeting the role',gain:5},
+      {action:'Add relevant certifications',gain:3},
+    ],
     strong:[
       {name:'Domain Knowledge',ev:'Relevant experience in your field demonstrated.'},
       {name:'Communication',ev:'Cross-team collaboration evidence present.'},
@@ -1340,6 +1788,7 @@ function showResults(currentRole,targetRole){
 
   const key = getRolePairKey(currentRole, targetRole);
   const d = PAIR_DATA[key];
+  const ccCat = roleCategory(currentRole);
 
   /* role banner */
   document.getElementById('rBannerCurrent').textContent=currentRole;
@@ -1349,21 +1798,25 @@ function showResults(currentRole,targetRole){
   document.getElementById('tabsBar').style.display='flex';
   document.getElementById('screen-results').style.display='block';
 
-  /* ── Dashboard gauges ── */
+  /* ══ R2-2: Overall Resume Score + 5 existing gauges ══ */
   setTimeout(()=>{
     animateGauge('gCareer',d.career,289);
     animateGauge('gATS',d.atsScore,289);
     animateGauge('gSkills',d.skills,289);
     animateGauge('gExp',d.exp,289);
+    animateGauge('gOverall',d.overall||70,289);
     animateCount(document.getElementById('gpCareer'),d.career,800,'%');
     animateCount(document.getElementById('gpATS'),d.atsScore,800,'%',scoreColor);
     animateCount(document.getElementById('gpSkills'),d.skills,800,'%');
     animateCount(document.getElementById('gpExp'),d.exp,800,'%');
+    animateCount(document.getElementById('gpOverall'),d.overall||70,800,'',scoreColor);
     setTimeout(()=>{
       document.getElementById('pCareer').style.width=d.career+'%';
       document.getElementById('pATS').style.width=d.atsScore+'%';
       document.getElementById('pSkills').style.width=d.skills+'%';
       document.getElementById('pExp').style.width=d.exp+'%';
+      document.getElementById('pOverall').style.width=(d.overall||70)+'%';
+      document.getElementById('gOverall').style.stroke=scoreColor(d.overall||70);
     },100);
     const needleDeg=-90+(d.aiWrite*1.8);
     document.getElementById('speedNeedle').setAttribute('transform',`rotate(${needleDeg} 65 70)`);
@@ -1377,7 +1830,6 @@ function showResults(currentRole,targetRole){
   document.getElementById('statPartial').textContent = d.partial.length;
   document.getElementById('statMissing').textContent = d.missing.length;
 
-  // update section tag counts
   const swEl = document.querySelector('#page-dashboard .section-wrapper');
   swEl.querySelector('.sec-title:first-child .stag').textContent = d.strong.length + ' Skills';
   swEl.querySelector('.sec-title.needs-stag .stag').textContent = d.partial.length + ' Areas';
@@ -1389,7 +1841,82 @@ function showResults(currentRole,targetRole){
     `<div class="skill-card"><div class="sk-head">🟡 ${s.name} <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">${s.ev}</div></div>`
   ).join('');
 
-  /* ── ATS Validator tab ── */
+  /* ══ R2-8: Career Readiness dimension bars ══ */
+  if(d.dims){
+    document.getElementById('readinessDimBars').innerHTML = d.dims.map(dim=>`
+      <div class="pr-row">
+        <div class="pr-labels"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:50%;background:${dim.color};display:inline-block;flex-shrink:0"></span>${dim.label}</span><span style="color:${scoreColor(dim.val)};font-weight:700">${dim.val}%</span></div>
+        <div class="pr-track"><div class="pr-fill" style="width:0%;background:${dim.color};transition:width 1.1s cubic-bezier(.4,0,.2,1)" data-target="${dim.val}"></div></div>
+      </div>`
+    ).join('');
+    setTimeout(()=>{
+      document.querySelectorAll('#readinessDimBars .pr-fill').forEach(el=>{
+        el.style.width=el.dataset.target+'%';
+      });
+    },200);
+  }
+
+  /* ══ R2-4: Skills Gap 3-column ══ */
+  if(d.sgPresent){
+    const chipStyle=(bg,border,color)=>`background:${bg};border-color:${border};color:${color};`;
+    document.getElementById('sgPresent').innerHTML=(d.sgPresent||[]).map(s=>`<span class="chip" style="${chipStyle('rgba(34,197,94,.12)','rgba(34,197,94,.3)','#22c55e')}">${s}</span>`).join('');
+    document.getElementById('sgPartial').innerHTML=(d.sgPartial||[]).map(s=>`<span class="chip" style="${chipStyle('rgba(245,158,11,.12)','rgba(245,158,11,.3)','#f59e0b')}">${s}</span>`).join('');
+    document.getElementById('sgMissing').innerHTML=(d.sgMissing||[]).map(s=>`<span class="chip" style="${chipStyle('rgba(239,68,68,.12)','rgba(239,68,68,.3)','#ef4444')}">${s}</span>`).join('');
+  }
+
+  /* ══ R2-3: Experience Gap table ══ */
+  if(d.expGaps){
+    document.getElementById('expGapBody').innerHTML=d.expGaps.map(g=>`
+      <tr>
+        <td style="font-weight:600">${g.resp}</td>
+        <td style="font-size:11px;color:var(--muted)">${g.ev}</td>
+        <td><span class="status-chip sc-${g.status}">${g.status==='g'?'✅ Found':g.status==='y'?'⚠️ Partial':'❌ Missing'}</span></td>
+        <td style="font-size:11px;color:var(--muted)">${g.rec}</td>
+      </tr>`
+    ).join('');
+    document.getElementById('missingCount').textContent=d.missing.length+' Critical Areas';
+  }
+
+  /* ══ R2-5: Competency Model tab ══ */
+  const compModelIcons={Technical:'⚙️',Architecture:'🏗️',Coverage:'🎯',Strategy:'📐',Leadership:'🤝',Management:'👥',Communication:'💬',Delivery:'🚀',DevOps:'🔧',Quality:'✅',Business:'💼',Core:'🧠'};
+  document.getElementById('compModelRoleTag').textContent=targetRole;
+  if(d.compModel){
+    document.getElementById('compModelGrid').innerHTML=Object.entries(d.compModel).map(([cat,items])=>`
+      <div class="comp-card">
+        <h4>${compModelIcons[cat]||'📊'} ${cat}</h4>
+        ${items.map(item=>`
+          <div class="pr-row">
+            <div class="pr-labels"><span>${item.name}</span><span style="color:${scoreColor(item.val)}">${item.val}%</span></div>
+            <div class="pr-track"><div class="pr-fill" style="width:0%;background:${scoreColor(item.val)};transition:width 1.1s ease" data-target="${item.val}"></div></div>
+          </div>`
+        ).join('')}
+      </div>`
+    ).join('');
+    setTimeout(()=>{
+      document.querySelectorAll('#compModelGrid .pr-fill').forEach(el=>{
+        el.style.width=el.dataset.target+'%';
+      });
+    },300);
+  }
+
+  /* ══ R2-6: Achievement Analysis ══ */
+  if(d.achieve){
+    const a=d.achieve;
+    document.getElementById('achieveScore').textContent=a.score;
+    document.getElementById('achieveScore').style.color=scoreColor(a.score);
+    document.getElementById('achieveBand').textContent=a.score>=70?'🟢 Strong':a.score>=50?'⚠️ Needs Work':'🔴 Weak — Prioritise';
+    document.getElementById('achieveBand').style.color=scoreColor(a.score);
+    document.getElementById('achieveQuantPct').textContent=a.quantPct+'%';
+    document.getElementById('achieveQuantBar').style.width=a.quantPct+'%';
+    document.getElementById('achieveActionPct').textContent=a.actionPct+'%';
+    document.getElementById('achieveActionBar').style.width=a.actionPct+'%';
+    document.getElementById('achieveEvPct').textContent=a.evPct+'%';
+    document.getElementById('achieveEvBar').style.width=a.evPct+'%';
+    document.getElementById('achieveProblems').innerHTML=a.problems.map(p=>`<div class="p-item p-mid" style="margin-bottom:8px"><strong>⚠️ ${p}</strong></div>`).join('');
+    document.getElementById('achieveHowTo').innerHTML=a.howTo.map(h=>`<div style="background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:9px 13px;font-size:12px;margin-bottom:7px">💡 ${h}</div>`).join('');
+  }
+
+  /* ══ ATS Validator tab ══ */
   const atsEl=document.getElementById('atsGaugeFill');
   atsEl.style.stroke=scoreColor(d.atsScore);
   const offset=402-(d.atsScore/100)*402;
@@ -1410,7 +1937,7 @@ function showResults(currentRole,targetRole){
   }).join('');
 
   document.getElementById('atsGapTitle').textContent=currentRole+' → '+targetRole+': Profile Gap';
-  document.getElementById('atsGapDesc').textContent='Based on your current and target role, here\'s what your resume demonstrates and what\'s missing.';
+  document.getElementById('atsGapDesc').textContent="Based on your current and target role, here's what your resume demonstrates and what's missing.";
   document.getElementById('atsStrengths').innerHTML=d.strong.map(s=>
     `<span class="gtag gtag-s"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>${s.name}</span>`
   ).join('');
@@ -1439,12 +1966,89 @@ function showResults(currentRole,targetRole){
     </tr>`;
   }).join('');
 
-  /* ── Action Plan from role-pair data ── */
-  document.getElementById('actionList').innerHTML=d.actions.map((a,i)=>
-    `<li><div class="action-num">${i+1}</div><div class="action-text"><strong>${a.text}</strong><span>${a.detail}</span></div></li>`
+  /* ══ R2-7: Multiple Target Roles table ══ */
+  const mrCat = ccCat==='tester'||ccCat==='test-architect'||ccCat==='qa-manager' ? 'tester' :
+                ccCat==='developer'||ccCat==='devops' ? 'developer' :
+                ccCat==='manager' ? 'manager' : 'other';
+  const mrProfiles = MULTI_ROLE_PROFILES[mrCat]||MULTI_ROLE_PROFILES.other;
+  const effortColor={Low:'#22c55e',Medium:'#f59e0b',High:'#f97316','Very High':'#ef4444'};
+  document.getElementById('multiRoleBody').innerHTML=mrProfiles.roles.map(r=>`
+    <tr>
+      <td style="font-weight:700">${r.role}</td>
+      <td style="color:${scoreColor(r.pct)};font-weight:800;font-size:1.1rem">${r.pct}%</td>
+      <td><div class="readiness-bar"><div class="readiness-fill" style="width:${r.pct}%;background:${scoreColor(r.pct)}"></div></div></td>
+      <td style="font-size:11px;color:var(--muted)">${r.gaps}</td>
+      <td><span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.2);color:${effortColor[r.effort]||'#f59e0b'};border:1px solid ${effortColor[r.effort]||'#f59e0b'}">${r.effort}</span></td>
+    </tr>`
   ).join('');
 
+  /* ══ R2-10: Score Improvement panel ══ */
+  const before = d.overall||70;
+  const gain = (d.scoreImprovements||[]).reduce((s,i)=>s+i.gain,0);
+  const after = Math.min(before+gain,99);
+  document.getElementById('siBeforeScore').textContent=before;
+  document.getElementById('siAfterScore').textContent=after;
+  const deltaEl=document.getElementById('siDelta');
+  deltaEl.style.display='inline-flex';
+  document.getElementById('siDeltaVal').textContent='+'+gain;
+  document.getElementById('siImprovements').innerHTML=(d.scoreImprovements||[]).map(imp=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px">
+      <span>✅ ${imp.action}</span>
+      <span style="font-size:11px;font-weight:800;color:var(--green);background:rgba(34,197,94,.1);padding:2px 8px;border-radius:99px;white-space:nowrap;margin-left:10px">+${imp.gain} pts</span>
+    </div>`
+  ).join('');
+
+  /* ══ R2-9: Accept / Reject / Edit controls ══ */
+  let acceptCt=0,rejectCt=0,editCt=0;
+  document.getElementById('actionCountTag').textContent = d.actions.length+' Actions';
+  document.getElementById('areList').innerHTML=d.actions.map((a,i)=>`
+    <div class="are-item" id="are-${i}">
+      <strong>${a.text}</strong>
+      <p>${a.detail}</p>
+      <div class="are-actions">
+        <button class="are-btn are-accept" onclick="areToggle(${i},'accept')">✅ Accept</button>
+        <button class="are-btn are-reject" onclick="areToggle(${i},'reject')">❌ Reject</button>
+        <button class="are-btn are-edit" onclick="areToggle(${i},'edit')">✏️ Edit</button>
+      </div>
+      <div class="are-edit-box" id="are-edit-${i}">
+        <textarea placeholder="Edit this suggestion to match your actual experience…">${a.detail}</textarea>
+      </div>
+    </div>`
+  ).join('');
+  updateAreCounts();
+
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══ Accept / Reject / Edit toggle ══ */
+function areToggle(i, action){
+  const item=document.getElementById('are-'+i);
+  const editBox=document.getElementById('are-edit-'+i);
+  const btns=item.querySelectorAll('.are-btn');
+  const acceptBtn=btns[0],rejectBtn=btns[1],editBtn=btns[2];
+  if(action==='edit'){
+    const open=editBox.style.display==='block';
+    editBox.style.display=open?'none':'block';
+    editBtn.classList.toggle('active',!open);
+  } else {
+    const isAccept=action==='accept';
+    const wasActive=isAccept?acceptBtn.classList.contains('active'):rejectBtn.classList.contains('active');
+    acceptBtn.classList.remove('active');rejectBtn.classList.remove('active');
+    if(!wasActive){ (isAccept?acceptBtn:rejectBtn).classList.add('active'); }
+  }
+  updateAreCounts();
+}
+function updateAreCounts(){
+  const items=document.querySelectorAll('.are-item');
+  let a=0,r=0,e=0;
+  items.forEach(item=>{
+    if(item.querySelector('.are-accept.active')) a++;
+    if(item.querySelector('.are-reject.active')) r++;
+    if(item.querySelector('.are-edit-box[style*="block"]')) e++;
+  });
+  document.getElementById('areAcceptCount').textContent=a;
+  document.getElementById('areRejectCount').textContent=r;
+  document.getElementById('areEditCount').textContent=e;
 }
 
 /* ════ Tab navigation ════ */
@@ -1475,7 +2079,7 @@ function resetApp(){
   document.getElementById('currentCustomRow').style.display='none';
   document.getElementById('targetCustomRow').style.display='none';
   // reset gauge visuals
-  ['gCareer','gATS','gSkills','gExp'].forEach(id=>{
+  ['gCareer','gATS','gSkills','gExp','gOverall'].forEach(id=>{
     document.getElementById(id).style.strokeDashoffset='289';
   });
   document.getElementById('atsGaugeFill').style.strokeDashoffset='402';
