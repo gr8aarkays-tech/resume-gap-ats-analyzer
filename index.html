@@ -79,10 +79,16 @@ body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:var(--
 
 /* fields */
 .field-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:6px;margin-top:14px;}
-input[type=text],textarea{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:11px 14px;font-family:inherit;font-size:13px;transition:.2s;resize:vertical;}
-input[type=text]:focus,textarea:focus{outline:none;border-color:var(--accent);background:rgba(99,102,241,.06);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
+input[type=text],textarea,select{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;color:var(--text);padding:11px 14px;font-family:inherit;font-size:13px;transition:.2s;resize:vertical;}
+input[type=text]:focus,textarea:focus,select:focus{outline:none;border-color:var(--accent);background:rgba(99,102,241,.06);box-shadow:0 0 0 3px rgba(99,102,241,.12);}
 input[type=text]::placeholder,textarea::placeholder{color:#454d6a;}
 textarea{min-height:100px;}
+select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%238a90a6' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer;}
+select option{background:var(--surface2);color:var(--text);}
+.role-select-wrap{position:relative;}
+.custom-input-row{display:flex;gap:8px;margin-top:8px;align-items:center;}
+.custom-input-row input{flex:1;min-width:0;}
+.custom-input-row .or-label{font-size:10px;color:var(--muted);white-space:nowrap;}
 
 /* chips */
 .chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
@@ -344,32 +350,95 @@ textarea{min-height:100px;}
         <div class="sec-label">🎯 Role Configuration</div>
 
         <span class="field-label">What is your current role?</span>
-        <input type="text" id="currentRole" value="Tester" placeholder="e.g. QA Engineer"/>
-        <div class="chip-row" id="currentChips">
-          <span class="chip sel" data-target="currentRole">Tester</span>
-          <span class="chip" data-target="currentRole">QA Engineer</span>
-          <span class="chip" data-target="currentRole">Sr. QA Engineer</span>
-          <span class="chip" data-target="currentRole">Automation Tester</span>
-          <span class="chip" data-target="currentRole">QA Lead</span>
-          <span class="chip" data-target="currentRole">Software Engineer</span>
+        <div class="role-select-wrap">
+          <select id="currentRole" onchange="syncTargetDefault()">
+            <optgroup label="QA / Testing">
+              <option>Tester</option>
+              <option>QA Engineer</option>
+              <option>Senior QA Engineer</option>
+              <option>Automation Tester</option>
+              <option>QA Lead</option>
+              <option>Test Lead</option>
+              <option>SDET</option>
+              <option>Performance Tester</option>
+              <option>QA Manager</option>
+              <option>Test Architect</option>
+            </optgroup>
+            <optgroup label="Engineering">
+              <option>Junior Developer</option>
+              <option>Software Engineer</option>
+              <option>Senior Software Engineer</option>
+              <option>Full Stack Developer</option>
+              <option>Frontend Developer</option>
+              <option>Backend Developer</option>
+              <option>DevOps Engineer</option>
+              <option>Cloud Engineer</option>
+              <option>Data Engineer</option>
+              <option>ML Engineer</option>
+            </optgroup>
+            <optgroup label="Leadership">
+              <option>Tech Lead</option>
+              <option>Engineering Manager</option>
+              <option>Product Manager</option>
+              <option>Scrum Master</option>
+              <option>Director of Engineering</option>
+            </optgroup>
+            <option value="__custom__">✏️ Type my own…</option>
+          </select>
+        </div>
+        <div class="custom-input-row" id="currentCustomRow" style="display:none">
+          <span class="or-label">Custom:</span>
+          <input type="text" id="currentRoleCustom" placeholder="e.g. Platform Engineer"/>
         </div>
 
         <span class="field-label">What role are you targeting?</span>
-        <input type="text" id="targetRole" value="Test Architect" placeholder="e.g. Test Architect"/>
-        <div class="chip-row" id="targetChips">
-          <span class="chip sel" data-target="targetRole">Test Architect</span>
-          <span class="chip" data-target="targetRole">QA Manager</span>
-          <span class="chip" data-target="targetRole">Engineering Manager</span>
-          <span class="chip" data-target="targetRole">SDET Lead</span>
-          <span class="chip" data-target="targetRole">Tech Lead</span>
+        <div class="role-select-wrap">
+          <select id="targetRole" onchange="onTargetChange()">
+            <optgroup label="QA / Testing">
+              <option>Tester</option>
+              <option>QA Engineer</option>
+              <option>Senior QA Engineer</option>
+              <option>Automation Tester</option>
+              <option>QA Lead</option>
+              <option>Test Lead</option>
+              <option>SDET</option>
+              <option>Performance Tester</option>
+              <option>QA Manager</option>
+              <option selected>Test Architect</option>
+            </optgroup>
+            <optgroup label="Engineering">
+              <option>Junior Developer</option>
+              <option>Software Engineer</option>
+              <option>Senior Software Engineer</option>
+              <option>Full Stack Developer</option>
+              <option>Frontend Developer</option>
+              <option>Backend Developer</option>
+              <option>DevOps Engineer</option>
+              <option>Cloud Engineer</option>
+              <option>Data Engineer</option>
+              <option>ML Engineer</option>
+            </optgroup>
+            <optgroup label="Leadership">
+              <option>Tech Lead</option>
+              <option>Engineering Manager</option>
+              <option>Product Manager</option>
+              <option>Scrum Master</option>
+              <option>Director of Engineering</option>
+            </optgroup>
+            <option value="__custom__">✏️ Type my own…</option>
+          </select>
+        </div>
+        <div class="custom-input-row" id="targetCustomRow" style="display:none">
+          <span class="or-label">Custom:</span>
+          <input type="text" id="targetRoleCustom" placeholder="e.g. Principal Engineer"/>
         </div>
 
         <span class="field-label">Job description <small style="color:var(--muted);text-transform:none;letter-spacing:0">(optional — improves keyword analysis)</small></span>
         <textarea style="min-height:76px" placeholder="Paste the target job description here for keyword matching and tailored gap analysis…"></textarea>
 
         <div class="btn-row">
-          <button class="btn btn-primary" onclick="runAnalysis()">🔍 Analyze My Career Gap →</button>
-          <button class="btn btn-secondary" onclick="runAnalysis()">📝 Analyze Resume Only</button>
+          <button class="btn btn-primary" onclick="runAnalysis('resume-only')">📝 Analyze Resume</button>
+          <button class="btn btn-secondary" onclick="runAnalysis('career-gap')">🔍 Analyze My Career Gap</button>
         </div>
       </div>
     </div>
@@ -509,29 +578,13 @@ textarea{min-height:100px;}
         <div class="stat-pill"><span class="dot dot-r"></span> Missing / Not Found: <strong id="statMissing">7</strong></div>
       </div>
 
-      <!-- What you have -->
+      <!-- What you have — populated dynamically by showResults() -->
       <div class="section-wrapper">
-        <div class="sec-title">✅ Strongly Demonstrated <span class="stag stag-g">8 Skills</span></div>
-        <div class="skill-grid">
-          <div class="skill-card"><div class="sk-head">🟢 Test Execution <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Executed functional and regression test cycles across 3 releases…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 Functional Testing <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Performed end-to-end functional testing for web and mobile apps…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 Defect Management <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Tracked defect lifecycle in JIRA across multiple sprints…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 Test Automation <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Created and maintained Selenium automation framework…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 API Testing <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Tested REST APIs using Postman and validated response schemas…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 SQL <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Wrote SQL queries to validate data integrity in backend databases…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 Selenium <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Built and maintained Selenium WebDriver tests in Java/TestNG…"</div></div>
-          <div class="skill-card"><div class="sk-head">🟢 CI/CD Basics <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">"Ran automation pipelines via Jenkins on every code commit…"</div></div>
-        </div>
+        <div class="sec-title">✅ Strongly Demonstrated <span class="stag stag-g">— Skills</span></div>
+        <div class="skill-grid" id="dashStrongGrid"></div>
 
-        <div class="sec-title" style="margin-top:4px">⚠️ Needs Strengthening <span class="stag stag-y">6 Areas</span></div>
-        <div class="skill-grid">
-          <div class="skill-card"><div class="sk-head">🟡 Automation Architecture <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Shows automation usage, not framework ownership or design decisions.</div></div>
-          <div class="skill-card"><div class="sk-head">🟡 CI/CD Integration <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Shows pipeline usage, not integration design or ownership.</div></div>
-          <div class="skill-card"><div class="sk-head">🟡 Technical Leadership <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Some evidence of guiding others — no explicit scope defined.</div></div>
-          <div class="skill-card"><div class="sk-head">🟡 Risk Management <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Risk-based testing mentioned briefly — no strategy context.</div></div>
-          <div class="skill-card"><div class="sk-head">🟡 Stakeholder Mgmt <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Cross-team collaboration noted — no executive reporting evidence.</div></div>
-          <div class="skill-card"><div class="sk-head">🟡 Framework Design <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">Scripts written — no evidence of design pattern decisions.</div></div>
-        </div>
+        <div class="sec-title needs-stag" style="margin-top:4px">⚠️ Needs Strengthening <span class="stag stag-y">— Areas</span></div>
+        <div class="skill-grid" id="dashPartialGrid"></div>
       </div>
     </div>
 
@@ -802,86 +855,366 @@ textarea{min-height:100px;}
 </footer>
 
 <script>
-/* ════════════════════════════════════
-   MOCK DATA ENGINE (from ats-validator)
-════════════════════════════════════ */
-const ROLE_DATA = {
-  default:{
-    atsScore:72,career:58,skills:64,exp:61,aiWrite:34,
-    strengths:['Communication','Teamwork','Problem Solving','Documentation','Agile','Attention to Detail'],
-    missing:['Leadership','Strategic Planning','Mentoring','Budget Management','Architecture Design'],
+/* ══════════════════════════════════════════════════
+   ROLE-PAIR DATA ENGINE
+   Key: computed from current+target role categories.
+   Each entry has: strong[], partial[], missing[],
+   matrixRows[], atsScore, career, skills, exp, aiWrite,
+   checks[], recs[], actions[]
+══════════════════════════════════════════════════ */
+
+// ── Category classifier ──
+function roleCategory(r=''){
+  r=r.toLowerCase();
+  if(/\b(tester|qa engineer|senior qa|automation tester|qa lead|test lead|sdet|performance tester)\b/.test(r)) return 'tester';
+  if(/\b(qa manager)\b/.test(r)) return 'qa-manager';
+  if(/\b(test architect)\b/.test(r)) return 'test-architect';
+  if(/\b(junior dev|junior developer|software engineer|senior software|full.?stack|frontend|backend|developer)\b/.test(r)) return 'developer';
+  if(/\b(devops|cloud engineer|data engineer|ml engineer)\b/.test(r)) return 'devops';
+  if(/\b(tech lead|engineering manager|product manager|scrum master|director)\b/.test(r)) return 'manager';
+  return 'other';
+}
+
+// ── Per-role-pair data ──
+const PAIR_DATA = {
+
+  // ── tester → tester (same role) ──
+  'tester:tester':{
+    atsScore:75, career:82, skills:78, exp:80, aiWrite:30,
+    strong:[
+      {name:'Test Execution',ev:'"Executed functional and regression test cycles across multiple releases."'},
+      {name:'Defect Management',ev:'"Tracked and managed defect lifecycle in JIRA."'},
+      {name:'Functional Testing',ev:'"Performed end-to-end functional tests for web and mobile."'},
+      {name:'Test Planning',ev:'"Created test plans and test cases for features."'},
+    ],
+    partial:[
+      {name:'Automation Skills',ev:'Some automation experience — depth and ownership not clearly stated.'},
+      {name:'API Testing',ev:'Mentioned but no detailed examples of schema validation or complex scenarios.'},
+    ],
+    missing:[
+      {name:'Measurable Impact',ev:'No quantified outcomes (e.g. defects found, coverage %).'},
+      {name:'Regression Strategy',ev:'No evidence of owning regression scope or prioritisation.'},
+    ],
+    matrix:[
+      {cap:'Manual Testing',ev:'Strong',req:'High'},{cap:'Test Planning',ev:'Strong',req:'High'},
+      {cap:'Defect Management',ev:'Strong',req:'High'},{cap:'Regression Testing',ev:'Partial',req:'High'},
+      {cap:'Automation Basics',ev:'Partial',req:'Medium'},{cap:'API Testing',ev:'Partial',req:'Medium'},
+      {cap:'SQL / Data Validation',ev:'Partial',req:'Medium'},{cap:'Agile / Scrum',ev:'Strong',req:'High'},
+    ],
     checks:[
-      {label:'File Format Readable',s:'pass'},{label:'No Text Boxes / Graphics Found',s:'pass'},
-      {label:'Standard Section Headings',s:'pass'},{label:'Contact Info in Header/Footer',s:'fail'},
-      {label:'Measurable Achievements Present',s:'warn'},{label:'No Tables Blocking Parsing',s:'pass'},
-      {label:'Consistent Date Formatting',s:'fail'},
+      {label:'File Format Readable',s:'pass'},{label:'Standard Section Headings',s:'pass'},
+      {label:'Contact Info Present',s:'pass'},{label:'Measurable Achievements',s:'warn'},
+      {label:'Consistent Date Formatting',s:'pass'},{label:'Role Keywords Present',s:'pass'},
     ],
     recs:[
-      {p:'high',title:'Add measurable achievements',body:'Replace vague statements like "improved performance" with quantified results: "Reduced regression suite runtime by 40% (from 90 min to 54 min)."'},
-      {p:'high',title:'Move contact info to plain header',body:'Many ATS systems only scan the header/footer for contact details. Ensure email, phone and LinkedIn are in a plain-text area outside any text boxes.'},
-      {p:'med',title:'Use target role keywords throughout',body:'ATS systems parse for exact keyword matches. Mirror the target job description — include terms like "architecture", "strategy" and "stakeholder" in context.'},
-      {p:'low',title:'Standardise all date formats',body:'Mixed formats (e.g. "Jan 2021" vs "2021-01") can confuse parsers. Use one consistent style: "Month YYYY" across all roles.'},
+      {p:'high',title:'Add quantified outcomes',body:'Replace "performed testing" with "Identified 45 critical defects across 3 releases, preventing production incidents."'},
+      {p:'high',title:'Clarify automation involvement',body:'State exactly what you automated, which tools you used, and how many tests you maintained.'},
+      {p:'med',title:'Add regression scope ownership',body:'Describe the size of the regression suite you owned and how you prioritised it.'},
+      {p:'low',title:'Polish professional summary',body:'A 2–3 line summary matching the job title and domain significantly improves ATS ranking.'},
+    ],
+    actions:[
+      {text:'Quantify defect detection rate',detail:'Add numbers: defects found, severity breakdown, or escapes prevented.'},
+      {text:'Describe regression suite ownership',detail:'Size, frequency, prioritisation — how did you decide what to test?'},
+      {text:'Detail automation scope',detail:'Tools, number of tests, coverage areas — even basic Selenium usage matters.'},
+      {text:'Add API testing specifics',detail:'Postman collections, contract testing, edge cases validated.'},
+      {text:'Mention JIRA/test management depth',detail:'Traceability, test cycles, reporting to stakeholders.'},
+      {text:'Add agile ceremony participation',detail:'Backlog grooming, sprint reviews, defect triage.'},
+      {text:'Include environment coverage',detail:'Dev, staging, production — environments you tested across.'},
+      {text:'Remove generic wording',detail:'Replace "responsible for testing" with specific outcomes.'},
     ],
   },
-  qa:{
-    atsScore:68,career:58,skills:64,exp:61,aiWrite:34,
-    strengths:['Selenium WebDriver','API Testing','JIRA','Test Planning','SQL','CI/CD Basics','Regression Testing'],
-    missing:['Test Architecture','Framework Design','Test Strategy Ownership','Mentoring Juniors','Stakeholder Reporting','Design Patterns (POM/Factory)'],
+
+  // ── tester → test architect ──
+  'tester:test-architect':{
+    atsScore:68, career:58, skills:64, exp:61, aiWrite:34,
+    strong:[
+      {name:'Test Execution',ev:'"Executed functional and regression test cycles across 3 releases."'},
+      {name:'Functional Testing',ev:'"Performed end-to-end functional testing for web and mobile apps."'},
+      {name:'Defect Management',ev:'"Tracked defect lifecycle in JIRA across multiple sprints."'},
+      {name:'Test Automation',ev:'"Created and maintained Selenium automation framework."'},
+      {name:'API Testing',ev:'"Tested REST APIs using Postman and validated response schemas."'},
+      {name:'SQL',ev:'"Wrote SQL queries to validate data integrity in backend databases."'},
+    ],
+    partial:[
+      {name:'CI/CD Integration',ev:'Shows pipeline usage, not integration design or ownership.'},
+      {name:'Technical Leadership',ev:'Some evidence of guiding others — no explicit scope defined.'},
+      {name:'Framework Design',ev:'Scripts written — no evidence of design pattern decisions.'},
+      {name:'Risk Management',ev:'Risk-based testing mentioned briefly — no strategy context.'},
+    ],
+    missing:[
+      {name:'Test Architecture',ev:'No evidence of designing end-to-end test architecture.'},
+      {name:'Test Strategy Ownership',ev:'No examples of defining strategy for a project or team.'},
+      {name:'Mentoring',ev:'No evidence of coaching or developing junior testers.'},
+      {name:'Quality Governance',ev:'No examples of setting quality standards across the team.'},
+      {name:'Design Patterns',ev:'No mention of POM, Factory, Builder or similar patterns.'},
+    ],
+    matrix:[
+      {cap:'Manual Testing',ev:'Strong',req:'Medium'},{cap:'Test Automation',ev:'Strong',req:'High'},
+      {cap:'Framework Design',ev:'Partial',req:'Very High'},{cap:'Test Architecture',ev:'Missing',req:'Very High'},
+      {cap:'Test Strategy',ev:'Missing',req:'Very High'},{cap:'CI/CD',ev:'Partial',req:'High'},
+      {cap:'API Testing',ev:'Strong',req:'High'},{cap:'Design Patterns',ev:'Missing',req:'High'},
+      {cap:'Technical Leadership',ev:'Partial',req:'High'},{cap:'Mentoring',ev:'Missing',req:'Medium'},
+      {cap:'Quality Governance',ev:'Missing',req:'High'},{cap:'Risk Management',ev:'Partial',req:'High'},
+    ],
     checks:[
       {label:'File Format Readable',s:'pass'},{label:'ATS-Friendly Fonts Used',s:'pass'},
       {label:'No Image-Based Text Found',s:'pass'},{label:'Contact Info in Header/Footer',s:'fail'},
-      {label:'Measurable Achievements Present',s:'warn'},{label:'Keywords Match Target Role',s:'fail'},
+      {label:'Measurable Achievements Present',s:'warn'},{label:'Architecture Keywords Found',s:'fail'},
       {label:'Consistent Date Formatting',s:'pass'},
     ],
     recs:[
       {p:'high',title:'Add framework ownership context',body:'Change "Used Selenium" to "Designed and maintained a Selenium + TestNG framework supporting 4 applications, reducing regression time by 35%."'},
       {p:'high',title:'Include architecture / strategy keywords',body:'Words like "framework design", "test strategy", "quality governance" are scanned for senior roles. Add them only where accurate.'},
       {p:'med',title:'Quantify CI/CD involvement',body:'Instead of "worked with Jenkins", write: "Configured Jenkins pipeline for nightly regression execution, cutting feedback time from 24h to 2h."'},
-      {p:'low',title:'Add a professional summary targeting the role',body:'A 2–3 line summary at the top with the target job title and key capabilities significantly improves ATS ranking for that role.'},
+      {p:'low',title:'Add a professional summary targeting the role',body:'A 2–3 line summary at the top with the target job title and key capabilities significantly improves ATS ranking.'},
+    ],
+    actions:[
+      {text:'Add automation framework ownership',detail:'Describe architecture, reusable components and design decisions you owned.'},
+      {text:'Demonstrate architecture decisions',detail:'Show what you designed, not just what you used.'},
+      {text:'Add test strategy responsibilities',detail:'Define where you set strategy vs. followed instructions.'},
+      {text:'Highlight CI/CD integration depth',detail:'Explain what you configured and why — not just that you used Jenkins.'},
+      {text:'Add technical leadership examples',detail:'Standards you introduced, tools you evaluated, decisions you made.'},
+      {text:'Add mentoring experience if applicable',detail:'Code reviews, onboarding, training — only if accurate.'},
+      {text:'Add design patterns used',detail:'POM, Factory, Builder — reference the pattern if genuinely used.'},
+      {text:'Quantify measurable impact',detail:'Use [add result if available] — do not invent numbers.'},
     ],
   },
-  dev:{
-    atsScore:78,career:72,skills:70,exp:68,aiWrite:28,
-    strengths:['JavaScript','React','Node.js','REST APIs','Git','Agile / Scrum','SQL','Unit Testing'],
-    missing:['System Design','Microservices Architecture','Cloud (AWS/GCP/Azure)','Team Leadership','Performance Engineering','DevOps / IaC'],
+
+  // ── tester → qa manager ──
+  'tester:qa-manager':{
+    atsScore:60, career:52, skills:55, exp:58, aiWrite:36,
+    strong:[
+      {name:'Test Execution',ev:'Solid hands-on testing experience across functional and regression.'},
+      {name:'Defect Management',ev:'Proven defect lifecycle tracking in JIRA.'},
+      {name:'Agile / Scrum',ev:'Sprint-based delivery participation demonstrated.'},
+    ],
+    partial:[
+      {name:'Team Communication',ev:'Cross-team collaboration noted — no leadership scope.'},
+      {name:'Process Improvement',ev:'Hints of process contribution — not ownership.'},
+    ],
+    missing:[
+      {name:'People Management',ev:'No evidence of hiring, reviews, or team development.'},
+      {name:'Stakeholder Reporting',ev:'No executive or management-level reporting shown.'},
+      {name:'Resource Planning',ev:'No evidence of capacity or headcount planning.'},
+      {name:'Quality Strategy',ev:'No team-level quality vision or governance described.'},
+      {name:'Metrics & KPIs',ev:'No QA dashboards, SLAs, or quality metrics ownership.'},
+    ],
+    matrix:[
+      {cap:'Technical QA',ev:'Strong',req:'Medium'},{cap:'People Management',ev:'Missing',req:'Very High'},
+      {cap:'Stakeholder Reporting',ev:'Missing',req:'High'},{cap:'Process Design',ev:'Partial',req:'High'},
+      {cap:'Quality Strategy',ev:'Missing',req:'Very High'},{cap:'Metrics / KPIs',ev:'Missing',req:'High'},
+      {cap:'Hiring / Onboarding',ev:'Missing',req:'High'},{cap:'Agile Delivery',ev:'Strong',req:'High'},
+    ],
     checks:[
-      {label:'File Format Readable',s:'pass'},{label:'No Text Boxes / Graphics Found',s:'warn'},
-      {label:'Standard Section Headings',s:'pass'},{label:'Contact Info in Header/Footer',s:'pass'},
-      {label:'Quantified Achievements Present',s:'fail'},{label:'Target Role Keywords Found',s:'warn'},
-      {label:'Consistent Date Formatting',s:'pass'},
+      {label:'File Format Readable',s:'pass'},{label:'Standard Section Headings',s:'pass'},
+      {label:'Contact Info Present',s:'pass'},{label:'Leadership Keywords Found',s:'fail'},
+      {label:'Quantified Business Outcomes',s:'fail'},{label:'People Management Evidence',s:'fail'},
     ],
     recs:[
-      {p:'high',title:'Add cloud technology experience',body:'Senior developer roles almost universally require cloud familiarity. If you have deployed to AWS/GCP/Azure even informally, describe it specifically.'},
-      {p:'high',title:'Quantify project impact',body:'Replace "built a dashboard" with "Built a real-time analytics dashboard serving 15k daily users, reducing report generation time by 60%."'},
-      {p:'med',title:'Remove creative resume graphics',body:'Columns, icons and infographic elements are often misread by ATS parsers. Use a clean, single-column, text-only layout for ATS submissions.'},
-      {p:'low',title:'Include system design language',body:'For senior / architect tracks, terms like "distributed systems", "scalability", "microservices" and "event-driven architecture" should appear in context.'},
+      {p:'high',title:'Show leadership experience',body:'Even informal leadership counts — mention times you coordinated work, ran stand-ups, or onboarded new testers.'},
+      {p:'high',title:'Add quality metrics you tracked',body:'Defect escape rate, test coverage %, sprint quality scores — any metrics you owned or contributed to.'},
+      {p:'med',title:'Describe process improvements',body:'Did you improve a test process? Document it as: "Introduced X which reduced Y by Z."'},
+      {p:'low',title:'Add a management-focused summary',body:'Frame your profile toward leadership: "QA professional transitioning into management with X years of hands-on delivery experience."'},
+    ],
+    actions:[
+      {text:'Highlight any informal leadership',detail:'Team coordination, onboarding support, running ceremonies.'},
+      {text:'Add quality metrics you reported on',detail:'Coverage %, defect density, test pass rates.'},
+      {text:'Describe process ownership',detail:'Any test process, tool, or practice you introduced or improved.'},
+      {text:'Add stakeholder communication examples',detail:'Status reports, defect summaries to product owners, sprint demos.'},
+      {text:'Mention hiring/interview involvement',detail:'Even reviewing CVs or conducting technical screens counts.'},
+      {text:'Quantify team size if applicable',detail:'Even "collaborated with a team of 5 testers" establishes scale.'},
     ],
   },
-  manager:{
-    atsScore:62,career:55,skills:58,exp:60,aiWrite:42,
-    strengths:['Team Leadership','Stakeholder Management','Budgeting','Roadmap Planning','Agile Delivery','Hiring'],
-    missing:['OKR / KPI Framework','Executive Reporting','P&L Ownership','Cross-functional Program Mgmt','Change Management Certification','Headcount Planning'],
+
+  // ── developer → developer (same) ──
+  'developer:developer':{
+    atsScore:76, career:80, skills:74, exp:77, aiWrite:28,
+    strong:[
+      {name:'Core Language Skills',ev:'Solid programming fundamentals demonstrated across projects.'},
+      {name:'Version Control (Git)',ev:'Git-based workflow including branching and PRs shown.'},
+      {name:'REST API Development',ev:'API design and integration experience demonstrated.'},
+      {name:'Unit / Integration Testing',ev:'Test coverage mentioned across projects.'},
+    ],
+    partial:[
+      {name:'System Design',ev:'Some architectural decisions — no large-scale system context.'},
+      {name:'Code Review Practice',ev:'Participation noted — no ownership of review standards.'},
+    ],
+    missing:[
+      {name:'Quantified Impact',ev:'No metrics on performance, scale, or business outcomes.'},
+      {name:'Cloud / Infrastructure',ev:'No cloud deployment or infrastructure experience shown.'},
+    ],
+    matrix:[
+      {cap:'Programming',ev:'Strong',req:'High'},{cap:'Testing',ev:'Strong',req:'High'},
+      {cap:'System Design',ev:'Partial',req:'High'},{cap:'CI/CD',ev:'Partial',req:'High'},
+      {cap:'Cloud Skills',ev:'Missing',req:'High'},{cap:'Code Review',ev:'Partial',req:'Medium'},
+      {cap:'Documentation',ev:'Strong',req:'Medium'},{cap:'Agile',ev:'Strong',req:'High'},
+    ],
+    checks:[
+      {label:'File Format Readable',s:'pass'},{label:'No Text Boxes Found',s:'warn'},
+      {label:'Standard Section Headings',s:'pass'},{label:'Contact Info Present',s:'pass'},
+      {label:'Quantified Achievements',s:'fail'},{label:'Target Role Keywords',s:'warn'},
+    ],
+    recs:[
+      {p:'high',title:'Quantify project impact',body:'Replace "built a dashboard" with "Built a real-time analytics dashboard serving 15k daily users, reducing report generation time by 60%."'},
+      {p:'high',title:'Add cloud/deployment experience',body:'Any AWS/GCP/Azure experience — even personal projects — should be included and described specifically.'},
+      {p:'med',title:'Remove creative resume graphics',body:'Columns, icons and infographics are often misread by ATS parsers. Use a clean single-column layout.'},
+      {p:'low',title:'Strengthen technical summary',body:'Lead with your tech stack and key accomplishments in 2–3 lines.'},
+    ],
+    actions:[
+      {text:'Quantify every project outcome',detail:'Users served, performance gains, time saved — add numbers where available.'},
+      {text:'Add cloud deployment details',detail:'Which services, what you deployed, how it was managed.'},
+      {text:'Describe architecture decisions',detail:'Patterns chosen, trade-offs made, scale considered.'},
+      {text:'Add CI/CD pipeline ownership',detail:'What you configured, maintained, or improved in the delivery pipeline.'},
+      {text:'Show code review impact',detail:'Standards introduced, defects caught, team practices improved.'},
+      {text:'Remove graphics from resume',detail:'ATS systems cannot parse icon-based skills sections.'},
+    ],
+  },
+
+  // ── developer → manager ──
+  'developer:manager':{
+    atsScore:62, career:55, skills:58, exp:60, aiWrite:35,
+    strong:[
+      {name:'Technical Depth',ev:'Strong hands-on engineering background.'},
+      {name:'Delivery Experience',ev:'Sprint-based feature delivery demonstrated.'},
+      {name:'Code Review',ev:'Peer review participation shown.'},
+    ],
+    partial:[
+      {name:'Team Collaboration',ev:'Cross-functional work noted — no leadership ownership.'},
+      {name:'Mentoring',ev:'Some knowledge sharing — not formal mentoring scope.'},
+    ],
+    missing:[
+      {name:'People Management',ev:'No hiring, performance reviews, or team development.'},
+      {name:'Roadmap Planning',ev:'No evidence of planning beyond sprint scope.'},
+      {name:'Stakeholder Management',ev:'No executive-level communication shown.'},
+      {name:'OKR / Metrics',ev:'No goal-setting framework or engineering metrics owned.'},
+    ],
+    matrix:[
+      {cap:'Technical Skills',ev:'Strong',req:'Medium'},{cap:'People Management',ev:'Missing',req:'Very High'},
+      {cap:'Roadmap Planning',ev:'Missing',req:'High'},{cap:'Stakeholder Mgmt',ev:'Missing',req:'High'},
+      {cap:'Mentoring',ev:'Partial',req:'High'},{cap:'OKR / Metrics',ev:'Missing',req:'High'},
+      {cap:'Agile Delivery',ev:'Strong',req:'High'},{cap:'Budget Awareness',ev:'Missing',req:'Medium'},
+    ],
+    checks:[
+      {label:'File Format Readable',s:'pass'},{label:'Standard Section Headings',s:'pass'},
+      {label:'Contact Info Present',s:'pass'},{label:'Leadership Keywords',s:'fail'},
+      {label:'Quantified Business Outcomes',s:'fail'},{label:'Management Experience',s:'fail'},
+    ],
+    recs:[
+      {p:'high',title:'Add any team leadership evidence',body:'Even informal — running ceremonies, onboarding engineers, coordinating across teams counts.'},
+      {p:'high',title:'Reframe technical wins as business outcomes',body:'Instead of "optimised query", write "Optimised database queries reducing page load by 70%, improving conversion rate by 12%."'},
+      {p:'med',title:'Add mentoring / coaching examples',body:'Code reviews, pair programming sessions, documentation for the team — frame these as developing others.'},
+      {p:'low',title:'Add management-track certifications',body:'Agile coaching, Scrum Master, or people management training signals serious intent.'},
+    ],
+    actions:[
+      {text:'Reframe all wins as business outcomes',detail:'Connect every technical achievement to a user or business metric.'},
+      {text:'Add informal leadership examples',detail:'Any time you coordinated, guided, or unblocked others.'},
+      {text:'Show mentoring / knowledge transfer',detail:'Documentation, tech talks, pair programming, code review standards.'},
+      {text:'Add cross-team project ownership',detail:'Feature leads, incident commanders, cross-squad initiatives.'},
+      {text:'Include any hiring involvement',detail:'Technical interviews, skills assessments, onboarding plans.'},
+      {text:'Add roadmap or planning contributions',detail:'Even input to sprint planning or backlog grooming shows strategic thinking.'},
+    ],
+  },
+
+  // ── manager → manager (same) ──
+  'manager:manager':{
+    atsScore:73, career:78, skills:72, exp:75, aiWrite:40,
+    strong:[
+      {name:'Team Leadership',ev:'Direct report management demonstrated.'},
+      {name:'Stakeholder Management',ev:'Cross-functional stakeholder engagement shown.'},
+      {name:'Agile Delivery',ev:'Sprint-based team delivery with measurable outcomes.'},
+      {name:'Hiring & Onboarding',ev:'Talent acquisition and onboarding experience present.'},
+    ],
+    partial:[
+      {name:'OKR / KPI Framework',ev:'Goal-setting mentioned — no formal framework ownership.'},
+      {name:'Budget Management',ev:'Cost awareness shown — no P&L or budget ownership.'},
+    ],
+    missing:[
+      {name:'Executive Reporting',ev:'No board-level or C-suite communication examples.'},
+      {name:'Organisational Design',ev:'No evidence of restructuring, hiring plans, or org strategy.'},
+    ],
+    matrix:[
+      {cap:'People Management',ev:'Strong',req:'High'},{cap:'Stakeholder Mgmt',ev:'Strong',req:'High'},
+      {cap:'OKR / KPIs',ev:'Partial',req:'High'},{cap:'Budget / P&L',ev:'Partial',req:'High'},
+      {cap:'Executive Comms',ev:'Missing',req:'High'},{cap:'Org Design',ev:'Missing',req:'Medium'},
+      {cap:'Hiring',ev:'Strong',req:'High'},{cap:'Agile / Delivery',ev:'Strong',req:'High'},
+    ],
     checks:[
       {label:'File Format Readable',s:'pass'},{label:'ATS-Friendly Layout',s:'fail'},
-      {label:'Standard Section Headings',s:'pass'},{label:'Contact Info in Header/Footer',s:'warn'},
-      {label:'Quantified Business Outcomes',s:'fail'},{label:'Leadership Keywords Present',s:'warn'},
-      {label:'Consistent Date Formatting',s:'pass'},
+      {label:'Standard Section Headings',s:'pass'},{label:'Contact Info Present',s:'warn'},
+      {label:'Quantified Business Outcomes',s:'fail'},{label:'Leadership Keywords',s:'warn'},
     ],
     recs:[
-      {p:'high',title:'Quantify team and business impact',body:'Leadership roles are judged on outcomes. Replace "led a team" with "Led a 12-person cross-functional team, delivering 3 product launches on time and under budget, generating $2.4M ARR."'},
-      {p:'high',title:'Move to an ATS-clean single-column format',body:'Manager CVs often feature creative two-column or infographic layouts that break ATS parsing. Submit a plain single-column version for applications.'},
-      {p:'med',title:'Add OKR / metrics framework language',body:'Director+ roles expect fluency with goal-setting frameworks. Include: "Implemented OKR framework across 4 teams, improving delivery predictability by 28%."'},
-      {p:'low',title:'Include certifications or formal training',body:'PMP, Agile Coaching, or similar certifications signal professional investment and are often ATS-filtered criteria for senior management tracks.'},
+      {p:'high',title:'Quantify team and business impact',body:'Replace "led a team" with "Led a 12-person cross-functional team, delivering 3 product launches on time and under budget."'},
+      {p:'high',title:'Move to ATS-clean single-column format',body:'Manager CVs often use creative layouts that break ATS parsing. Use a plain single-column version for applications.'},
+      {p:'med',title:'Add OKR / metrics framework language',body:'Include: "Implemented OKR framework across 4 teams, improving delivery predictability by 28%."'},
+      {p:'low',title:'Add certifications or formal training',body:'PMP, Agile Coaching, or similar certifications signal professional investment.'},
+    ],
+    actions:[
+      {text:'Quantify every leadership outcome',detail:'Team size, business impact, revenue, cost savings.'},
+      {text:'Add OKR or metrics framework ownership',detail:'What did you measure, how did you set goals?'},
+      {text:'Show executive communication',detail:'Board decks, QBR presentations, C-suite briefings.'},
+      {text:'Document organisational changes',detail:'Restructures, team growth, new practice introductions.'},
+      {text:'Add budget ownership evidence',detail:'Cost management, vendor negotiations, headcount planning.'},
+      {text:'Rewrite to ATS single-column format',detail:'Remove two-column layouts and infographic sections.'},
+    ],
+  },
+
+  // ── fallback ──
+  'other:other':{
+    atsScore:70, career:65, skills:62, exp:63, aiWrite:35,
+    strong:[
+      {name:'Domain Knowledge',ev:'Relevant experience in your field demonstrated.'},
+      {name:'Communication',ev:'Cross-team collaboration evidence present.'},
+      {name:'Problem Solving',ev:'Evidence of tackling complex challenges.'},
+    ],
+    partial:[
+      {name:'Quantified Impact',ev:'Outcomes mentioned but not measured.'},
+      {name:'Leadership Signals',ev:'Some ownership language — scope not fully clear.'},
+    ],
+    missing:[
+      {name:'Target Role Keywords',ev:'Resume language does not closely mirror the target role expectations.'},
+      {name:'Measurable Achievements',ev:'Specific numbers or outcomes are absent.'},
+      {name:'Role-specific Certifications',ev:'No certifications aligned to the target role.'},
+    ],
+    matrix:[
+      {cap:'Core Competency',ev:'Strong',req:'High'},{cap:'Target Keywords',ev:'Missing',req:'High'},
+      {cap:'Quantified Outcomes',ev:'Missing',req:'High'},{cap:'Leadership',ev:'Partial',req:'Medium'},
+      {cap:'Certifications',ev:'Missing',req:'Medium'},{cap:'Agile',ev:'Partial',req:'Medium'},
+    ],
+    checks:[
+      {label:'File Format Readable',s:'pass'},{label:'Standard Section Headings',s:'pass'},
+      {label:'Contact Info Present',s:'pass'},{label:'Target Role Keywords',s:'fail'},
+      {label:'Measurable Achievements',s:'fail'},{label:'Consistent Date Formatting',s:'warn'},
+    ],
+    recs:[
+      {p:'high',title:'Mirror target role keywords',body:'Read the job description and ensure key terms appear in your resume — only where accurate.'},
+      {p:'high',title:'Add measurable achievements',body:'Every bullet should include a result: time saved, output produced, cost reduced, or quality improved.'},
+      {p:'med',title:'Add relevant certifications',body:'Research certifications aligned to your target role and add any you hold.'},
+      {p:'low',title:'Clean up formatting for ATS',body:'Use a plain, single-column, standard-heading format for best ATS compatibility.'},
+    ],
+    actions:[
+      {text:'Add target role keywords throughout',detail:'Mirror exact language from the job description where it accurately represents your experience.'},
+      {text:'Quantify every major achievement',detail:'Numbers: users, revenue, time, percentage improvements.'},
+      {text:'Research target role expectations',detail:'Find 3–5 job descriptions for your target role and identify common requirements.'},
+      {text:'Add certifications if applicable',detail:'Any credential relevant to the target role strengthens positioning.'},
+      {text:'Clean up ATS formatting',detail:'Remove tables, columns, graphics, and special fonts.'},
+      {text:'Write a targeted professional summary',detail:'2–3 lines positioning you for the specific target role.'},
     ],
   },
 };
 
-function detectProfile(c='',t=''){
-  const all=(c+' '+t).toLowerCase();
-  if(/\b(qa|quality|tester|test|sdet|automation)\b/.test(all)) return 'qa';
-  if(/\b(dev|developer|engineer|swe|software|front|back|full.?stack|web)\b/.test(all)) return 'dev';
-  if(/\b(manager|lead|director|head|vp|cto|cio|chief|program|product)\b/.test(all)) return 'manager';
-  return 'default';
+function getRolePairKey(current, target) {
+  const cc = roleCategory(current);
+  const tc = roleCategory(target);
+  const key = cc + ':' + tc;
+  if (PAIR_DATA[key]) return key;
+  // fallback mappings
+  const ccG = cc.includes('tester')||cc==='test-architect'||cc==='qa-manager' ? 'tester' : cc.includes('dev')||cc==='devops' ? 'developer' : 'manager';
+  const tcG = tc.includes('tester') ? 'tester' : tc==='test-architect' ? 'test-architect' : tc==='qa-manager' ? 'qa-manager' : tc.includes('dev')||tc==='devops' ? 'developer' : 'manager';
+  const fallKey = ccG + ':' + tcG;
+  if (PAIR_DATA[fallKey]) return fallKey;
+  if (cc === tc || ccG === tcG) return ccG + ':' + ccG;
+  return 'other:other';
 }
 
 /* ════ Score colour helpers ════ */
@@ -895,6 +1228,35 @@ function scoreDesc(s){
   if(s>=80) return 'Your resume is well-optimised for this role. Focus on minor polish.';
   if(s>=60) return 'Several improvements will meaningfully boost your ATS ranking.';
   return 'Significant gaps detected. Prioritise the recommendations below.';
+}
+
+/* ════ Dropdown sync ════ */
+function syncTargetDefault(){
+  const sel = document.getElementById('currentRole');
+  const tgt = document.getElementById('targetRole');
+  if(sel.value === '__custom__'){
+    document.getElementById('currentCustomRow').style.display='flex';
+  } else {
+    document.getElementById('currentCustomRow').style.display='none';
+    // mirror current → target only if target hasn't been changed from its initial default
+    tgt.value = sel.value;
+    document.getElementById('targetCustomRow').style.display='none';
+  }
+}
+function onTargetChange(){
+  const sel = document.getElementById('targetRole');
+  if(sel.value === '__custom__'){
+    document.getElementById('targetCustomRow').style.display='flex';
+  } else {
+    document.getElementById('targetCustomRow').style.display='none';
+  }
+}
+function getSelectedRole(selectId, customId){
+  const sel = document.getElementById(selectId);
+  if(sel.value === '__custom__'){
+    return document.getElementById(customId).value.trim() || 'Custom Role';
+  }
+  return sel.value;
 }
 
 /* ════ Drop zone ════ */
@@ -920,15 +1282,7 @@ dropZone.addEventListener('drop',e=>{
   }
 });
 
-/* ════ Chip selection ════ */
-document.querySelectorAll('.chip[data-target]').forEach(chip=>{
-  chip.addEventListener('click',()=>{
-    const targetId=chip.dataset.target;
-    chip.closest('.chip-row').querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
-    chip.classList.add('sel');
-    document.getElementById(targetId).value=chip.textContent.trim();
-  });
-});
+/* ════ Chip toggle (non-role chips in results) ════ */
 document.querySelectorAll('.chip:not([data-target])').forEach(chip=>{
   chip.addEventListener('click',()=>chip.classList.toggle('sel'));
 });
@@ -953,9 +1307,9 @@ function animateGauge(circleId,pct,circumference){
 }
 
 /* ════ Analysis flow ════ */
-function runAnalysis(){
-  const currentRole=document.getElementById('currentRole').value.trim()||'Current Role';
-  const targetRole=document.getElementById('targetRole').value.trim()||'Target Role';
+function runAnalysis(mode){
+  const currentRole = getSelectedRole('currentRole','currentRoleCustom');
+  const targetRole  = getSelectedRole('targetRole','targetRoleCustom');
 
   document.getElementById('screen-input').style.display='none';
   document.getElementById('screen-loading').style.display='block';
@@ -984,8 +1338,8 @@ function runAnalysis(){
 function showResults(currentRole,targetRole){
   document.getElementById('screen-loading').style.display='none';
 
-  const profile=detectProfile(currentRole,targetRole);
-  const d=ROLE_DATA[profile];
+  const key = getRolePairKey(currentRole, targetRole);
+  const d = PAIR_DATA[key];
 
   /* role banner */
   document.getElementById('rBannerCurrent').textContent=currentRole;
@@ -996,7 +1350,6 @@ function showResults(currentRole,targetRole){
   document.getElementById('screen-results').style.display='block';
 
   /* ── Dashboard gauges ── */
-  // circumference for r=46: 2π×46 ≈ 289
   setTimeout(()=>{
     animateGauge('gCareer',d.career,289);
     animateGauge('gATS',d.atsScore,289);
@@ -1006,24 +1359,37 @@ function showResults(currentRole,targetRole){
     animateCount(document.getElementById('gpATS'),d.atsScore,800,'%',scoreColor);
     animateCount(document.getElementById('gpSkills'),d.skills,800,'%');
     animateCount(document.getElementById('gpExp'),d.exp,800,'%');
-    // progress bars
     setTimeout(()=>{
       document.getElementById('pCareer').style.width=d.career+'%';
       document.getElementById('pATS').style.width=d.atsScore+'%';
       document.getElementById('pSkills').style.width=d.skills+'%';
       document.getElementById('pExp').style.width=d.exp+'%';
     },100);
-    // speedometer needle (0=left -90deg, 100=right +90deg → map aiWrite to -90+aiWrite*1.8)
     const needleDeg=-90+(d.aiWrite*1.8);
     document.getElementById('speedNeedle').setAttribute('transform',`rotate(${needleDeg} 65 70)`);
-    // fill: totalArc=173 dashoffset = 173 - (aiWrite/100)*173
     document.getElementById('speedFill').style.strokeDashoffset=173-(d.aiWrite/100)*173;
     animateCount(document.getElementById('speedText'),d.aiWrite,800,'%');
     document.getElementById('speedText').style.fill='#ef4444';
   },100);
 
+  /* ── Dashboard: skill cards rendered from role-pair data ── */
+  document.getElementById('statStrong').textContent = d.strong.length;
+  document.getElementById('statPartial').textContent = d.partial.length;
+  document.getElementById('statMissing').textContent = d.missing.length;
+
+  // update section tag counts
+  const swEl = document.querySelector('#page-dashboard .section-wrapper');
+  swEl.querySelector('.sec-title:first-child .stag').textContent = d.strong.length + ' Skills';
+  swEl.querySelector('.sec-title.needs-stag .stag').textContent = d.partial.length + ' Areas';
+
+  document.getElementById('dashStrongGrid').innerHTML = d.strong.map(s=>
+    `<div class="skill-card"><div class="sk-head">🟢 ${s.name} <span class="sk-badge sk-strong">Strong</span></div><div class="sk-ev">${s.ev}</div></div>`
+  ).join('');
+  document.getElementById('dashPartialGrid').innerHTML = d.partial.map(s=>
+    `<div class="skill-card"><div class="sk-head">🟡 ${s.name} <span class="sk-badge sk-partial">Partial</span></div><div class="sk-ev">${s.ev}</div></div>`
+  ).join('');
+
   /* ── ATS Validator tab ── */
-  // animated gauge (circumference r=64: 402)
   const atsEl=document.getElementById('atsGaugeFill');
   atsEl.style.stroke=scoreColor(d.atsScore);
   const offset=402-(d.atsScore/100)*402;
@@ -1037,74 +1403,44 @@ function showResults(currentRole,targetRole){
   bandEl.style.cssText=`background:${band.bg};color:${band.color};border:1px solid ${band.border};padding:5px 14px;border-radius:99px;font-size:12px;font-weight:800;`;
   document.getElementById('atsScoreDesc').textContent=scoreDesc(d.atsScore);
 
-  // checklist
   document.getElementById('atsCheckList').innerHTML=d.checks.map(c=>{
     const icon=c.s==='pass'?'✓':c.s==='fail'?'✕':'!';
     const lbl=c.s==='pass'?'PASS':c.s==='fail'?'FAIL':'WARN';
     return `<li><span class="ci ci-${c.s}">${icon}</span><span class="ck-text">${c.label}</span><span class="ck-badge ck-${c.s}">${lbl}</span></li>`;
   }).join('');
 
-  // gap analysis
   document.getElementById('atsGapTitle').textContent=currentRole+' → '+targetRole+': Profile Gap';
   document.getElementById('atsGapDesc').textContent='Based on your current and target role, here\'s what your resume demonstrates and what\'s missing.';
-  document.getElementById('atsStrengths').innerHTML=d.strengths.map(s=>
-    `<span class="gtag gtag-s"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>${s}</span>`
+  document.getElementById('atsStrengths').innerHTML=d.strong.map(s=>
+    `<span class="gtag gtag-s"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>${s.name}</span>`
   ).join('');
   document.getElementById('atsMissing').innerHTML=d.missing.map(m=>
-    `<span class="gtag gtag-m"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${m}</span>`
+    `<span class="gtag gtag-m"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>${m.name}</span>`
   ).join('');
 
-  // recommendations
   const pMap={high:'ptag-high',med:'ptag-med',low:'ptag-low'};
   const pLbl={high:'High Priority',med:'Medium',low:'Polish'};
   document.getElementById('atsRecList').innerHTML=d.recs.map((r,i)=>
     `<li><div class="rec-num">${i+1}</div><div class="rec-body"><strong>${r.title}<span class="priority-tag ${pMap[r.p]}">${pLbl[r.p]}</span></strong><span>${r.body}</span></div></li>`
   ).join('');
 
-  /* ── Competency Matrix ── */
-  const matrixData=[
-    {cap:'Manual Testing',ev:'Strong',req:'Medium',gap:'green'},
-    {cap:'Automation',ev:'Strong',req:'High',gap:'green'},
-    {cap:'Framework Design',ev:'Partial',req:'Very High',gap:'yellow'},
-    {cap:'Test Architecture',ev:'Missing',req:'Very High',gap:'red'},
-    {cap:'Test Strategy',ev:'Missing',req:'Very High',gap:'red'},
-    {cap:'CI/CD',ev:'Partial',req:'High',gap:'yellow'},
-    {cap:'API Testing',ev:'Strong',req:'High',gap:'green'},
-    {cap:'Database Testing',ev:'Strong',req:'Medium',gap:'green'},
-    {cap:'Design Patterns',ev:'Missing',req:'High',gap:'red'},
-    {cap:'Technical Leadership',ev:'Partial',req:'High',gap:'yellow'},
-    {cap:'Mentoring',ev:'Missing',req:'Medium',gap:'red'},
-    {cap:'Quality Governance',ev:'Missing',req:'High',gap:'red'},
-    {cap:'Risk Management',ev:'Partial',req:'High',gap:'yellow'},
-    {cap:'Stakeholder Mgmt',ev:'Partial',req:'High',gap:'yellow'},
-  ];
+  /* ── Competency Matrix from role-pair data ── */
   const evColor={Strong:'#22c55e',Partial:'#f59e0b',Missing:'#ef4444'};
   const gapIcon={green:'🟢',yellow:'🟡',red:'🔴'};
-  document.getElementById('matrixBody').innerHTML=matrixData.map(r=>{
+  document.getElementById('matrixBody').innerHTML=d.matrix.map(r=>{
     const pct={Strong:100,Partial:50,Missing:10}[r.ev];
+    const gapColor = pct===100?'green':pct===50?'yellow':'red';
     return `<tr>
       <td style="font-weight:600">${r.cap}</td>
       <td style="color:${evColor[r.ev]};font-weight:700">${r.ev}</td>
-      <td><span class="stag stag-${r.gap==='green'?'g':r.gap==='yellow'?'y':'r'}" style="padding:2px 8px;border-radius:99px;font-size:10px">${r.req}</span></td>
-      <td style="text-align:center;font-size:16px">${gapIcon[r.gap]}</td>
+      <td><span class="stag stag-${gapColor==='green'?'g':gapColor==='yellow'?'y':'r'}" style="padding:2px 8px;border-radius:99px;font-size:10px">${r.req}</span></td>
+      <td style="text-align:center;font-size:16px">${gapIcon[gapColor]}</td>
       <td style="min-width:110px"><div style="display:flex;gap:4px;align-items:center"><div style="flex:1;background:var(--surface2);border-radius:99px;height:5px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${evColor[r.ev]};border-radius:99px"></div></div><span style="font-size:10px;color:var(--muted)">${pct}%</span></div></td>
     </tr>`;
   }).join('');
 
-  /* ── Action Plan ── */
-  const actions=[
-    {text:'Add automation framework ownership',detail:'Describe architecture, reusable components and design decisions you owned.'},
-    {text:'Demonstrate architecture decisions',detail:'Show what you designed, not just what you used.'},
-    {text:'Add test strategy responsibilities',detail:'Define where you set strategy vs. followed instructions.'},
-    {text:'Highlight CI/CD integration depth',detail:'Explain what you configured and why — not just that you used Jenkins.'},
-    {text:'Add technical leadership examples',detail:'Standards you introduced, tools you evaluated, decisions you made.'},
-    {text:'Add mentoring experience if applicable',detail:'Code reviews, onboarding, training — only if accurate.'},
-    {text:'Add design patterns / framework principles',detail:'POM, Factory, Builder — reference the pattern if genuinely used.'},
-    {text:'Add quality engineering initiatives',detail:'Team-level quality practices you introduced or owned.'},
-    {text:'Quantify measurable impact',detail:'Use [add result if available] — do not invent numbers.'},
-    {text:'Reduce generic / AI-like wording',detail:'Replace buzzwords with specific, evidence-backed statements.'},
-  ];
-  document.getElementById('actionList').innerHTML=actions.map((a,i)=>
+  /* ── Action Plan from role-pair data ── */
+  document.getElementById('actionList').innerHTML=d.actions.map((a,i)=>
     `<li><div class="action-num">${i+1}</div><div class="action-text"><strong>${a.text}</strong><span>${a.detail}</span></div></li>`
   ).join('');
 
@@ -1136,6 +1472,8 @@ function resetApp(){
   document.getElementById('ldBar').style.width='0%';
   document.getElementById('currentRole').value='Tester';
   document.getElementById('targetRole').value='Test Architect';
+  document.getElementById('currentCustomRow').style.display='none';
+  document.getElementById('targetCustomRow').style.display='none';
   // reset gauge visuals
   ['gCareer','gATS','gSkills','gExp'].forEach(id=>{
     document.getElementById(id).style.strokeDashoffset='289';
