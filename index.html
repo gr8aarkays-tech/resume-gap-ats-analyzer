@@ -8,7 +8,7 @@
 /* ── Reset & Tokens ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  /* dark palette */
+  /* dark palette (default) */
   --bg:#0f1117;
   --surface:#1a1d27;
   --surface2:#22263a;
@@ -17,7 +17,9 @@
   --muted:#8a90a6;
   --accent:#6366f1;
   --accent2:#8b5cf6;
-  /* semantic */
+  --hdr-start:#1e1b4b;
+  --hdr-end:#312e81;
+  /* semantic — unchanged across themes */
   --green:#22c55e;  --green-bg:rgba(34,197,94,.1);   --green-border:rgba(34,197,94,.3);
   --yellow:#f59e0b; --yellow-bg:rgba(245,158,11,.1);  --yellow-border:rgba(245,158,11,.3);
   --red:#ef4444;    --red-bg:rgba(239,68,68,.1);      --red-border:rgba(239,68,68,.3);
@@ -25,13 +27,79 @@
   --blue:#3b82f6;   --cyan:#06b6d4;
   --radius:16px;
 }
+
+/* ── LIGHT theme ── */
+[data-theme="light"]{
+  --bg:#f3f4f8;
+  --surface:#ffffff;
+  --surface2:#eef0f7;
+  --border:#d1d5e0;
+  --text:#1a1d27;
+  --muted:#5a6080;
+  --accent:#4f46e5;
+  --accent2:#7c3aed;
+  --hdr-start:#312e81;
+  --hdr-end:#4338ca;
+}
+
+/* ── OCEAN theme ── */
+[data-theme="ocean"]{
+  --bg:#061420;
+  --surface:#0b2035;
+  --surface2:#0d2a45;
+  --border:#164060;
+  --text:#d0eaf8;
+  --muted:#6da4c4;
+  --accent:#0ea5e9;
+  --accent2:#38bdf8;
+  --hdr-start:#0c2a45;
+  --hdr-end:#164e80;
+}
+
+/* ── FOREST theme ── */
+[data-theme="forest"]{
+  --bg:#0a130c;
+  --surface:#0f1f12;
+  --surface2:#152818;
+  --border:#1e3d24;
+  --text:#d4edd8;
+  --muted:#6aab74;
+  --accent:#22c55e;
+  --accent2:#16a34a;
+  --hdr-start:#0d2211;
+  --hdr-end:#163d1e;
+}
+
+/* ── SUNSET theme ── */
+[data-theme="sunset"]{
+  --bg:#160d0a;
+  --surface:#221510;
+  --surface2:#2e1c14;
+  --border:#4a2c1e;
+  --text:#fde8d8;
+  --muted:#b07060;
+  --accent:#f97316;
+  --accent2:#fb923c;
+  --hdr-start:#2d1308;
+  --hdr-end:#7c2d12;
+}
+
+/* ── Theme switcher UI ── */
+.theme-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;color:#fff;display:flex;align-items:center;gap:6px;position:relative;transition:.15s;white-space:nowrap;}
+.theme-btn:hover{background:rgba(255,255,255,.18);}
+.theme-popover{display:none;position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:10px;z-index:999;min-width:180px;box-shadow:0 12px 36px rgba(0,0,0,.4);}
+.theme-popover.open{display:block;}
+.theme-option{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:12.5px;font-weight:600;transition:.12s;color:var(--text);}
+.theme-option:hover{background:var(--surface2);}
+.theme-option.active{background:rgba(99,102,241,.15);color:var(--accent);}
+.theme-swatch{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:2px solid rgba(255,255,255,.25);}
 body{font-family:-apple-system,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
 ::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
 
 /* ════════════════ APP SHELL ════════════════ */
-.app-header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap;}
+.app-header{background:linear-gradient(135deg,var(--hdr-start) 0%,var(--hdr-end) 50%,var(--hdr-start) 100%);padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap;}
 .app-header h1{font-size:1.2rem;font-weight:800;letter-spacing:-.3px;}
 .app-header h1 span{color:#818cf8;}
 .hdr-badges{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
@@ -344,6 +412,30 @@ select option{background:var(--surface2);color:var(--text);}
   <div class="hdr-badges">
     <span class="badge">AI-Directional Assessment</span>
     <span class="badge" style="background:rgba(34,197,94,.15);color:#4ade80;border-color:#22c55e">No Backend</span>
+
+    <!-- Theme switcher -->
+    <div style="position:relative">
+      <button class="theme-btn" id="themeBtnTrigger" onclick="toggleThemePopover(event)">
+        🎨 Theme <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="theme-popover" id="themePopover">
+        <div class="theme-option active" data-theme="" onclick="applyTheme('')">
+          <span class="theme-swatch" style="background:#1a1d27;border-color:#6366f1"></span> 🌑 Dark (Default)
+        </div>
+        <div class="theme-option" data-theme="light" onclick="applyTheme('light')">
+          <span class="theme-swatch" style="background:#ffffff;border-color:#4f46e5"></span> ☀️ Light
+        </div>
+        <div class="theme-option" data-theme="ocean" onclick="applyTheme('ocean')">
+          <span class="theme-swatch" style="background:#0b2035;border-color:#0ea5e9"></span> 🌊 Ocean
+        </div>
+        <div class="theme-option" data-theme="forest" onclick="applyTheme('forest')">
+          <span class="theme-swatch" style="background:#0f1f12;border-color:#22c55e"></span> 🌲 Forest
+        </div>
+        <div class="theme-option" data-theme="sunset" onclick="applyTheme('sunset')">
+          <span class="theme-swatch" style="background:#221510;border-color:#f97316"></span> 🌅 Sunset
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2060,6 +2152,29 @@ document.querySelectorAll('.tab').forEach(tab=>{
     document.getElementById('page-'+tab.dataset.page).classList.add('active');
   });
 });
+
+/* ════ Theme Switcher ════ */
+const THEMES=['','light','ocean','forest','sunset'];
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t);
+  try{localStorage.setItem('ats-theme',t);}catch(e){}
+  document.querySelectorAll('.theme-option').forEach(el=>{
+    el.classList.toggle('active',el.dataset.theme===t);
+  });
+  document.getElementById('themePopover').classList.remove('open');
+}
+function toggleThemePopover(e){
+  e.stopPropagation();
+  document.getElementById('themePopover').classList.toggle('open');
+}
+document.addEventListener('click',()=>document.getElementById('themePopover').classList.remove('open'));
+// Restore saved theme on load
+(function(){
+  try{
+    const saved=localStorage.getItem('ats-theme');
+    if(saved!==null) applyTheme(saved);
+  }catch(e){}
+})();
 
 /* ════ Reset ════ */
 function resetApp(){
